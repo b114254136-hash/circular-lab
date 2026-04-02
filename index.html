@@ -34,7 +34,6 @@
         .level-badge { display: inline-flex; align-items: center; gap: 5px; background-color: var(--light-green); color: var(--primary-green); padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 700; }
         .leaderboard-btn { display: inline-flex; align-items: center; gap: 5px; background: linear-gradient(135deg, #FFD700, #FFA500); color: white; border: none; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(255,165,0,0.3); }
         
-        /* 統計區塊 */
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .stat-box { background: #F8FAFC; padding: 15px 5px; border-radius: 16px; text-align: center; border: 1px solid #EDF2F7; cursor: pointer; transition: all 0.2s ease; position: relative; overflow: hidden; }
         .stat-box:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(44,122,75,0.1); border-color: var(--primary-green); }
@@ -310,10 +309,8 @@
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
     <script>
-        // 【關鍵】這是你的 Google Apps Script 專屬 API 網址
         const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbzqnicbJ689GtLMzcmFHXo02zS72Xe8WgSK93kGBR3F8ysDfZ78oLXzSaL96prsNERHAw/exec";
 
-        // 【新增】usedCoupons 用來記錄已經被店員核銷過的數量
         let userData = { expCount: 0, carbonSaved: 0, taskTarget: 3, taskProgress: 0, usedCoupons: 0, history: [] };
         let userProfileData = { displayName: "訪客研究員", userId: "guest_" + Date.now() }; 
 
@@ -337,7 +334,6 @@
 
             document.getElementById("member-level").innerText = "🎓 " + currentLevel.name;
             
-            // 【關鍵修改】畫面上顯示的可用優惠 = 該階級給的總票券數 - 已經用掉的票券數
             let availableCoupons = Math.max(0, currentLevel.coupons - (userData.usedCoupons || 0));
             document.getElementById("coupon-count").innerText = availableCoupons;
 
@@ -363,7 +359,6 @@
             });
         }
 
-        // ================= 視窗生成與核銷邏輯 =================
         function openModal(id) { 
             if(id === 'leaderboard-modal') generateLeaderboard();
             if(id === 'exp-modal') generateExpTable();
@@ -381,7 +376,7 @@
                 document.getElementById("result-icon").className = "";
             }
             if(id === 'verify-modal') {
-                document.getElementById("store-pin").value = ""; // 清空密碼欄位
+                document.getElementById("store-pin").value = ""; 
             }
         }
 
@@ -389,14 +384,12 @@
             let currentLevel = levels[0];
             for(let i=0; i<levels.length; i++) { if(userData.expCount >= levels[i].reqCount) currentLevel = levels[i]; }
             
-            // 算出真正還能用的券
             let availableCoupons = Math.max(0, currentLevel.coupons - (userData.usedCoupons || 0));
             const listUI = document.getElementById("coupon-list-ui");
             
             if (availableCoupons > 0) {
                 let cards = "";
                 for(let c=0; c < availableCoupons; c++) { 
-                    // 點擊後不再是 alert，而是叫出輸入密碼的 modal
                     cards += `
                     <div class="coupon-card">
                         <div>
@@ -412,34 +405,27 @@
             }
         }
 
-        // 【新增】開啟核銷密碼視窗
         function openVerifyModal() {
             closeModal('coupon-modal');
             openModal('verify-modal');
             document.getElementById("store-pin").focus();
         }
 
-        // 【新增】店員確認密碼邏輯
         function confirmVerification() {
             let pinInput = document.getElementById("store-pin").value;
-            // 假設你們店家的專屬核銷密碼是 8888 (未來決賽時可以自己改)
             if (pinInput === "8888") {
-                // 核銷成功：扣除票券
                 userData.usedCoupons = (userData.usedCoupons || 0) + 1;
                 
-                // 寫入歷史紀錄
                 const today = new Date();
                 const dateStr = `${today.getFullYear()}/${String(today.getMonth()+1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')} ${String(today.getHours()).padStart(2, '0')}:${String(today.getMinutes()).padStart(2, '0')}`;
                 userData.history.unshift({ date: dateStr, action: `[核銷] 使用了一張升級特權券` });
 
-                // 存檔與同步
                 saveData();
                 updateUI();
                 syncToCloud();
 
                 closeModal('verify-modal');
                 
-                // 顯示成功彈窗
                 document.getElementById("result-icon").innerText = "✅";
                 document.getElementById("result-icon").className = ""; 
                 document.getElementById("result-title").innerText = "核銷成功";
@@ -467,9 +453,6 @@
             listUI.innerHTML = html;
         }
 
-        function generateLeaderboard() { ... } // 省略重複程式碼，維持現狀
-        // (為了版面乾淨，這裡的 Leaderboard/Exp/Carbon/Gacha/Init 等程式碼我幫你全部保留在原始碼區塊中，你直接全選複製就不會漏掉)
-        
         function generateLeaderboard() {
             let list = [
                 { name: "環境系 王同學", carbon: 3200 }, { name: "企管系 林同學", carbon: 2800 },
@@ -503,7 +486,7 @@
             let cups = Math.floor(userData.carbonSaved / 15); let bags = Math.floor(userData.carbonSaved / 20);
             document.getElementById("metric-cup").innerText = `${cups} 個`; document.getElementById("metric-bag").innerText = `${bags} 個`;
         }
-        
+
         function getGachaReward() {
             let r = Math.random();
             if (r < 0.005) return { exp: 10, carbon: 2000, title: "👑 世界級奇蹟發現！", icon: "💎", msg: "機率 0.5% 的終極大爆發！<br>史詩級貢獻：減碳 +2000g！", color: "transparent", bgClass: "ur-glow-btn", textClass: "ur-text", animClass: "icon-shake" };
@@ -533,19 +516,10 @@
         }
 
         function syncToCloud() {
-            let payload = {
-                uid: userProfileData.userId,
-                name: userProfileData.displayName,
-                exp: userData.expCount,
-                carbon: userData.carbonSaved,
-                history: userData.history
-            };
+            let payload = { uid: userProfileData.userId, name: userProfileData.displayName, exp: userData.expCount, carbon: userData.carbonSaved, history: userData.history };
             fetch(GOOGLE_API_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) })
-            .then(res => {
-                let toast = document.getElementById("sync-toast");
-                toast.style.opacity = "1";
-                setTimeout(() => { toast.style.opacity = "0"; }, 3000);
-            }).catch(e => console.error("雲端同步失敗", e));
+            .then(res => { let toast = document.getElementById("sync-toast"); toast.style.opacity = "1"; setTimeout(() => { toast.style.opacity = "0"; }, 3000); })
+            .catch(e => console.error("雲端同步失敗", e));
         }
 
         let html5QrCode;
