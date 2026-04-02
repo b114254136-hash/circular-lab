@@ -26,7 +26,7 @@
         .header-bg::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('data:image/svg+xml;utf8,<svg width="480" height="190" viewBox="0 0 480 190" fill="none" xmlns="http://www.w3.org/2000/svg"><g opacity="0.15"><path d="M480 190C480 190 440 180 400 160C360 140 320 120 280 120C240 120 200 140 160 160C120 180 80 190 80 190V120C80 120 120 110 160 90C200 70 240 50 280 50C320 50 360 70 400 90C440 110 480 120 480 120V190Z" fill="%23FFFFFF"/><circle cx="20" cy="50" r="1.5" fill="%23FFFFFF" opacity="0.6"><animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite" /></circle><circle cx="150" cy="80" r="1" fill="%23FFFFFF" opacity="0.4"><animate attributeName="opacity" values="0.4;1;0.4" dur="2.5s" repeatCount="indefinite" /></circle><circle cx="300" cy="20" r="2" fill="%23FFFFFF" opacity="0.7"><animate attributeName="opacity" values="0.7;1;0.7" dur="1.8s" repeatCount="indefinite" /></circle><circle cx="450" cy="110" r="1.2" fill="%23FFFFFF" opacity="0.5"><animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite" /></circle></g></svg>'); background-size: cover; background-position: center; }
         .header-title { color: var(--gold-accent); text-align: center; font-size: 20px; font-weight: 700; padding-top: 25px; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.15); position: relative; z-index: 10; }
         .container { max-width: 480px; margin: 40px auto 0; padding: 0 20px; position: relative; z-index: 10; }
-        .profile-card { background: white; border-radius: 20px; padding: 30px 20px 20px; text-align: center; box-shadow: var(--card-shadow); margin-bottom: 25px; position: relative; }
+        .profile-card { background: white; border-radius: 20px; padding: 30px 20px 20px; text-align: center; box-shadow: var(--card-shadow); margin-bottom: 20px; position: relative; }
         .profile-pic-wrapper { width: 90px; height: 90px; border-radius: 50%; border: 4px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; margin: -60px auto 10px; background: white; }
         #profile-picture { width: 100%; height: 100%; object-fit: cover; display: none; }
         #profile-name { font-size: 22px; font-weight: 700; color: var(--text-dark); margin-bottom: 2px; }
@@ -65,6 +65,11 @@
         .history-date { color: var(--text-gray); font-size: 11px; min-width: 75px; font-weight: 600; margin-top: 2px;}
         .history-desc { color: var(--primary-green); font-weight: 600; line-height: 1.4;}
         
+        /* 地圖探索按鈕 (NEW) */
+        .map-explore-btn { background: white; color: var(--text-dark); border: 2px solid #EDF2F7; width: 100%; padding: 14px; border-radius: 16px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; transition: all 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.03);}
+        .map-explore-btn:active { background: #F8FAFC; transform: scale(0.98); }
+        .map-explore-btn svg { color: var(--primary-green); }
+
         .scan-btn { background: var(--gradient-green); color: white; border: none; width: 100%; padding: 18px; border-radius: 16px; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 6px 15px rgba(44,122,75,0.3); display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 25px; transition: transform 0.1s; }
         .scan-btn:active { transform: scale(0.97); }
 
@@ -82,6 +87,14 @@
         .ur-text { background: linear-gradient(270deg, #ff0055, #ff9900, #33cc33, #3399ff, #9933ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 400% 400%; animation: urRainbow 3s ease infinite; }
         @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg) scale(1); } 20% { transform: translate(-3px, 0px) rotate(5deg) scale(1.1); } 40% { transform: translate(1px, -1px) rotate(-5deg) scale(1.1); } 60% { transform: translate(-3px, 1px) rotate(5deg) scale(1.1); } 80% { transform: translate(-1px, -1px) rotate(-5deg) scale(1.1); } 100% { transform: translate(1px, -2px) rotate(0deg) scale(1); } }
         .icon-shake { animation: shake 0.6s ease-in-out infinite; }
+
+        /* 特約地圖商店列表 UI (NEW) */
+        .store-list { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+        .store-card { background: #F8FAFC; border: 1px solid #EDF2F7; border-radius: 16px; padding: 15px; position: relative; }
+        .store-badge { position: absolute; top: 15px; right: 15px; background: #E8F5E9; color: #2C7A4B; font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 8px; }
+        .store-name { font-size: 15px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; display: flex; align-items: center; gap: 5px;}
+        .store-location { font-size: 12px; color: var(--text-gray); margin-bottom: 8px; display: flex; align-items: center; gap: 4px;}
+        .store-promo { font-size: 12px; color: #E65100; font-weight: 600; background: #FFF3E0; display: inline-block; padding: 4px 8px; border-radius: 6px; }
 
         .rank-list { text-align: left; display: flex; flex-direction: column; gap: 12px; }
         .rank-item { display: flex; align-items: center; padding: 12px; border-radius: 12px; background: #f8fafc; border-left: 4px solid #cbd5e0; }
@@ -108,14 +121,8 @@
         .coupon-use-btn { background: white; color: #E65100; border: none; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; transition: 0.2s;}
         .coupon-use-btn:active { transform: scale(0.95); }
 
-        /* 店員核銷專屬 UI */
         .pin-input { font-size: 24px; letter-spacing: 8px; text-align: center; width: 100%; padding: 10px; border-radius: 10px; border: 2px solid #CBD5E0; margin: 15px 0; font-weight: bold; color: var(--primary-green);}
         .pin-input:focus { outline: none; border-color: var(--primary-green); }
-
-        .how-to-get-box { background: var(--light-green); border-radius: 12px; padding: 15px; text-align: left; }
-        .how-to-get-box h4 { color: var(--primary-green); margin-bottom: 8px; font-size: 14px; display: flex; align-items: center; gap: 5px;}
-        .how-to-get-box ul { font-size: 12px; color: var(--text-dark); padding-left: 20px; margin: 0; line-height: 1.6; }
-
         .leaderboard-list { text-align: left; display: flex; flex-direction: column; gap: 10px; }
         .lb-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background: #F8FAFC; border-radius: 12px; font-size: 14px; font-weight: 600;}
         .lb-item.top-1 { background: linear-gradient(to right, #FFF8E1, white); border-left: 4px solid #FFD700; }
@@ -197,6 +204,11 @@
             </div>
         </div>
 
+        <button class="map-explore-btn" onclick="openModal('map-modal')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            探索周邊特約實驗室
+        </button>
+
         <button class="scan-btn" id="manual-scan-btn">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3h5v5H4z"/><path d="M15 3h5v5h-5z"/><path d="M15 16h5v5h-5z"/><path d="M4 16h5v5H4z"/><path d="M9 3v5"/><path d="M9 16v5"/><path d="M15 3v5"/><path d="M15 16v5"/></svg>
             按我掃描，挑戰 UR 級大爆擊！
@@ -237,75 +249,55 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="leaderboard-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>🏆 永續英雄排行榜</h3>
-                <button class="close-icon-btn" onclick="closeModal('leaderboard-modal')">&times;</button>
+    <div class="modal-overlay" id="map-modal">
+        <div class="modal-content" style="background: #F7FAFC;">
+            <div class="modal-header" style="border-bottom: 1px solid #E2E8F0;">
+                <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> 合作實驗室地圖</h3>
+                <button class="close-icon-btn" onclick="closeModal('map-modal')">&times;</button>
             </div>
-            <p style="font-size:12px; color:var(--text-gray); margin-top:-10px; margin-bottom:15px;">全校減碳貢獻 Top 5</p>
-            <div class="leaderboard-list" id="leaderboard-list"></div>
+            
+            <div class="store-list">
+                <div class="store-card">
+                    <div class="store-badge">🟢 營業中</div>
+                    <div class="store-name">🧋 碼上循環實驗室 (總部)</div>
+                    <div class="store-location"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/></svg> 高科大燕巢校區 管院一樓</div>
+                    <div class="store-promo">今日活動：掃描抽爆擊機率 UP！</div>
+                </div>
+                
+                <div class="store-card">
+                    <div class="store-badge" style="background: #EDF2F7; color: #718096;">🔴 休息中</div>
+                    <div class="store-name">☕ 循環咖啡 建工特約店</div>
+                    <div class="store-location"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/></svg> 高科大建工校區 咖啡廳</div>
+                    <div class="store-promo" style="background: #E8F5E9; color: #2C7A4B;">憑副教授階級享 9 折</div>
+                </div>
+
+                <div class="store-card">
+                    <div class="store-badge">🟢 營業中</div>
+                    <div class="store-name">🍵 永續茶飲 楠梓門市</div>
+                    <div class="store-location"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/></svg> 高科大楠梓校區 學生餐廳</div>
+                    <div class="store-promo" style="background: #E8F5E9; color: #2C7A4B;">支援掃碼累積 EXP</div>
+                </div>
+            </div>
+
+            <button class="primary-btn" style="background: #2D3748; margin-top: 20px; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="alert('感謝您的興趣！請聯繫高科大碼上循環團隊洽談加盟方案。')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5c-1.3 0-2 .7-2 2v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                我是店家，申請加入聯盟
+            </button>
         </div>
     </div>
 
-    <div class="modal-overlay" id="exp-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31"/><path d="M14 9.3V1.99"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><path d="M5.52 16h12.96"/></svg> 階級路線圖</h3>
-                <button class="close-icon-btn" onclick="closeModal('exp-modal')">&times;</button>
-            </div>
-            <div class="rank-list" id="rank-list-ui"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="carbon-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg> 我的永續足跡</h3>
-                <button class="close-icon-btn" onclick="closeModal('carbon-modal')">&times;</button>
-            </div>
-            <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 10px;">您在實驗室的累積總減碳量為</p>
-            <div class="carbon-hero" id="modal-carbon-val">0 <span>g</span></div>
-            <div class="metric-cards">
-                <div class="metric-card"><div class="metric-icon">🥤</div><div class="metric-num" id="metric-cup">0 個</div><div class="metric-text">相當於省下塑膠杯</div></div>
-                <div class="metric-card"><div class="metric-icon">🛍️</div><div class="metric-num" id="metric-bag">0 個</div><div class="metric-text">相當於少用塑膠袋</div></div>
-            </div>
-            <div style="background: var(--light-green); color: var(--primary-green); padding: 10px; border-radius: 12px; font-size: 12px; font-weight: 600;">
-                💡 依環境部數據，製造一個塑膠杯約產生 15g 碳排。
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="coupon-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg> 我的專屬票夾</h3>
-                <button class="close-icon-btn" onclick="closeModal('coupon-modal')">&times;</button>
-            </div>
-            <div id="coupon-list-ui"></div>
-            <div class="how-to-get-box">
-                <h4><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> 如何取得優惠券？</h4>
-                <ul><li><strong>累積實驗：</strong>掃描杯身條碼達標，系統自動發放。</li><li><strong>階級特權：</strong>升級副教授即可常駐解鎖折扣。</li></ul>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="full-history-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>📜 完整實驗日誌</h3>
-                <button class="close-icon-btn" onclick="closeModal('full-history-modal')">&times;</button>
-            </div>
-            <p style="font-size: 12px; color: var(--text-gray); margin-top: -10px; margin-bottom: 15px;">您在實驗室的每一次貢獻與爆擊</p>
-            <div class="full-history-container" id="full-history-list-ui"></div>
-        </div>
-    </div>
+    <div class="modal-overlay" id="leaderboard-modal"><div class="modal-content"><div class="modal-header"><h3>🏆 永續英雄排行榜</h3><button class="close-icon-btn" onclick="closeModal('leaderboard-modal')">&times;</button></div><p style="font-size:12px; color:var(--text-gray); margin-top:-10px; margin-bottom:15px;">全校減碳貢獻 Top 5</p><div class="leaderboard-list" id="leaderboard-list"></div></div></div>
+    <div class="modal-overlay" id="exp-modal"><div class="modal-content"><div class="modal-header"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31"/><path d="M14 9.3V1.99"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><path d="M5.52 16h12.96"/></svg> 階級路線圖</h3><button class="close-icon-btn" onclick="closeModal('exp-modal')">&times;</button></div><div class="rank-list" id="rank-list-ui"></div></div></div>
+    <div class="modal-overlay" id="carbon-modal"><div class="modal-content"><div class="modal-header"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg> 我的永續足跡</h3><button class="close-icon-btn" onclick="closeModal('carbon-modal')">&times;</button></div><p style="font-size: 13px; color: var(--text-gray); margin-bottom: 10px;">您在實驗室的累積總減碳量為</p><div class="carbon-hero" id="modal-carbon-val">0 <span>g</span></div><div class="metric-cards"><div class="metric-card"><div class="metric-icon">🥤</div><div class="metric-num" id="metric-cup">0 個</div><div class="metric-text">相當於省下塑膠杯</div></div><div class="metric-card"><div class="metric-icon">🛍️</div><div class="metric-num" id="metric-bag">0 個</div><div class="metric-text">相當於少用塑膠袋</div></div></div><div style="background: var(--light-green); color: var(--primary-green); padding: 10px; border-radius: 12px; font-size: 12px; font-weight: 600;">💡 依環境部數據，製造一個塑膠杯約產生 15g 碳排。</div></div></div>
+    <div class="modal-overlay" id="coupon-modal"><div class="modal-content"><div class="modal-header"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg> 我的專屬票夾</h3><button class="close-icon-btn" onclick="closeModal('coupon-modal')">&times;</button></div><div id="coupon-list-ui"></div><div class="how-to-get-box"><h4><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> 如何取得優惠券？</h4><ul><li><strong>累積實驗：</strong>掃描杯身條碼達標，系統自動發放。</li><li><strong>階級特權：</strong>升級副教授即可常駐解鎖折扣。</li></ul></div></div></div>
+    <div class="modal-overlay" id="full-history-modal"><div class="modal-content"><div class="modal-header"><h3>📜 完整實驗日誌</h3><button class="close-icon-btn" onclick="closeModal('full-history-modal')">&times;</button></div><p style="font-size: 12px; color: var(--text-gray); margin-top: -10px; margin-bottom: 15px;">您在實驗室的每一次貢獻與爆擊</p><div class="full-history-container" id="full-history-list-ui"></div></div></div>
 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
     <script>
         const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbzqnicbJ689GtLMzcmFHXo02zS72Xe8WgSK93kGBR3F8ysDfZ78oLXzSaL96prsNERHAw/exec";
+        
         let lastDrawnRewardTitle = "✅ 實驗紀錄";
         let userData = { expCount: 0, carbonSaved: 0, taskTarget: 3, taskProgress: 0, usedCoupons: 0, history: [] };
         let userProfileData = { displayName: "訪客研究員", userId: "guest_" + Date.now() }; 
