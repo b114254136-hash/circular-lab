@@ -108,7 +108,6 @@
         .coupon-use-btn { background: white; color: #E65100; border: none; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; transition: 0.2s;}
         .coupon-use-btn:active { transform: scale(0.95); }
 
-        /* 店員核銷專屬 UI */
         .pin-input { font-size: 24px; letter-spacing: 8px; text-align: center; width: 100%; padding: 10px; border-radius: 10px; border: 2px solid #CBD5E0; margin: 15px 0; font-weight: bold; color: var(--primary-green);}
         .pin-input:focus { outline: none; border-color: var(--primary-green); }
 
@@ -133,23 +132,15 @@
     </style>
 </head>
 <body>
-    <div id="loading-overlay">
-        <div class="spinner"></div>
-        <p style="color: #2C7A4B; font-weight: 600; font-size: 15px;">資料同步中 Syncing...</p>
-    </div>
-
+    <div id="loading-overlay"><div class="spinner"></div><p style="color: #2C7A4B; font-weight: 600; font-size: 15px;">資料同步中 Syncing...</p></div>
     <div id="sync-toast" class="sync-toast">☁️ 資料已同步至雲端實驗室</div>
-
     <div class="header-bg"></div>
     <div class="header-title">🌱★碼上循環實驗室★🌱</div>
 
     <div class="container">
         <div class="profile-card">
-            <div class="profile-pic-wrapper">
-                <img id="profile-picture" alt="User" src="">
-            </div>
+            <div class="profile-pic-wrapper"><img id="profile-picture" alt="User" src=""></div>
             <h2 id="profile-name">訪客研究員</h2>
-            
             <div class="badge-row">
                 <div class="level-badge" id="member-level">🎓 助理研究員</div>
                 <button class="leaderboard-btn" onclick="openModal('leaderboard-modal')">🏆 排行榜</button>
@@ -226,8 +217,14 @@
         <div class="modal-content" style="max-width: 300px; overflow: visible;">
             <div id="result-icon" style="font-size: 60px; margin-bottom: 5px;">🌱</div>
             <h3 id="result-title" style="margin-bottom: 10px; font-size: 22px;">掃描成功</h3>
-            <p id="result-desc" style="font-size: 14px; font-weight: 600; color: var(--text-dark); margin-bottom: 20px;"></p>
+            <p id="result-desc" style="font-size: 14px; font-weight: 600; color: var(--text-dark); margin-bottom: 15px;"></p>
+            
             <button class="primary-btn" id="result-btn" onclick="closeModal('result-modal')">太棒了，收下！</button>
+            
+            <button class="primary-btn" id="share-btn" style="background: #06C755; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="shareToLine()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                向 LINE 好友炫耀 (+50g)
+            </button>
         </div>
     </div>
 
@@ -241,75 +238,20 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="leaderboard-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>🏆 永續英雄排行榜</h3>
-                <button class="close-icon-btn" onclick="closeModal('leaderboard-modal')">&times;</button>
-            </div>
-            <p style="font-size:12px; color:var(--text-gray); margin-top:-10px; margin-bottom:15px;">全校減碳貢獻 Top 5</p>
-            <div class="leaderboard-list" id="leaderboard-list"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="exp-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31"/><path d="M14 9.3V1.99"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><path d="M5.52 16h12.96"/></svg> 階級路線圖</h3>
-                <button class="close-icon-btn" onclick="closeModal('exp-modal')">&times;</button>
-            </div>
-            <div class="rank-list" id="rank-list-ui"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="carbon-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg> 我的永續足跡</h3>
-                <button class="close-icon-btn" onclick="closeModal('carbon-modal')">&times;</button>
-            </div>
-            <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 10px;">您在實驗室的累積總減碳量為</p>
-            <div class="carbon-hero" id="modal-carbon-val">0 <span>g</span></div>
-            <div class="metric-cards">
-                <div class="metric-card"><div class="metric-icon">🥤</div><div class="metric-num" id="metric-cup">0 個</div><div class="metric-text">相當於省下塑膠杯</div></div>
-                <div class="metric-card"><div class="metric-icon">🛍️</div><div class="metric-num" id="metric-bag">0 個</div><div class="metric-text">相當於少用塑膠袋</div></div>
-            </div>
-            <div style="background: var(--light-green); color: var(--primary-green); padding: 10px; border-radius: 12px; font-size: 12px; font-weight: 600;">
-                💡 依環境部數據，製造一個塑膠杯約產生 15g 碳排。
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="coupon-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg> 我的專屬票夾</h3>
-                <button class="close-icon-btn" onclick="closeModal('coupon-modal')">&times;</button>
-            </div>
-            <div id="coupon-list-ui"></div>
-            <div class="how-to-get-box">
-                <h4><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> 如何取得優惠券？</h4>
-                <ul><li><strong>累積實驗：</strong>掃描杯身條碼達標，系統自動發放。</li><li><strong>階級特權：</strong>升級副教授即可常駐解鎖折扣。</li></ul>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="full-history-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>📜 完整實驗日誌</h3>
-                <button class="close-icon-btn" onclick="closeModal('full-history-modal')">&times;</button>
-            </div>
-            <p style="font-size: 12px; color: var(--text-gray); margin-top: -10px; margin-bottom: 15px;">您在實驗室的每一次貢獻與爆擊</p>
-            <div class="full-history-container" id="full-history-list-ui"></div>
-        </div>
-    </div>
+    <div class="modal-overlay" id="leaderboard-modal"><div class="modal-content"><div class="modal-header"><h3>🏆 永續英雄排行榜</h3><button class="close-icon-btn" onclick="closeModal('leaderboard-modal')">&times;</button></div><div class="leaderboard-list" id="leaderboard-list"></div></div></div>
+    <div class="modal-overlay" id="exp-modal"><div class="modal-content"><div class="modal-header"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31"/><path d="M14 9.3V1.99"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><path d="M5.52 16h12.96"/></svg> 階級路線圖</h3><button class="close-icon-btn" onclick="closeModal('exp-modal')">&times;</button></div><div class="rank-list" id="rank-list-ui"></div></div></div>
+    <div class="modal-overlay" id="carbon-modal"><div class="modal-content"><div class="modal-header"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg> 我的永續足跡</h3><button class="close-icon-btn" onclick="closeModal('carbon-modal')">&times;</button></div><p style="font-size: 13px; color: var(--text-gray); margin-bottom: 10px;">您在實驗室的累積總減碳量為</p><div class="carbon-hero" id="modal-carbon-val">0 <span>g</span></div><div class="metric-cards"><div class="metric-card"><div class="metric-icon">🥤</div><div class="metric-num" id="metric-cup">0 個</div><div class="metric-text">相當於省下塑膠杯</div></div><div class="metric-card"><div class="metric-icon">🛍️</div><div class="metric-num" id="metric-bag">0 個</div><div class="metric-text">相當於少用塑膠袋</div></div></div><div style="background: var(--light-green); color: var(--primary-green); padding: 10px; border-radius: 12px; font-size: 12px; font-weight: 600;">💡 依環境部數據，製造一個塑膠杯約產生 15g 碳排。</div></div></div>
+    <div class="modal-overlay" id="coupon-modal"><div class="modal-content"><div class="modal-header"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg> 我的專屬票夾</h3><button class="close-icon-btn" onclick="closeModal('coupon-modal')">&times;</button></div><div id="coupon-list-ui"></div><div class="how-to-get-box"><h4><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> 如何取得優惠券？</h4><ul><li><strong>累積實驗：</strong>掃描杯身條碼達標，系統自動發放。</li><li><strong>階級特權：</strong>升級副教授即可常駐解鎖折扣。</li></ul></div></div></div>
+    <div class="modal-overlay" id="full-history-modal"><div class="modal-content"><div class="modal-header"><h3>📜 完整實驗日誌</h3><button class="close-icon-btn" onclick="closeModal('full-history-modal')">&times;</button></div><p style="font-size: 12px; color: var(--text-gray); margin-top: -10px; margin-bottom: 15px;">您在實驗室的每一次貢獻與爆擊</p><div class="full-history-container" id="full-history-list-ui"></div></div></div>
 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
     <script>
         const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbzqnicbJ689GtLMzcmFHXo02zS72Xe8WgSK93kGBR3F8ysDfZ78oLXzSaL96prsNERHAw/exec";
+        
+        // 【新增】為了讓分享時知道剛剛抽到什麼，我們把它存成全域變數
+        let lastDrawnRewardTitle = "✅ 實驗紀錄";
 
         let userData = { expCount: 0, carbonSaved: 0, taskTarget: 3, taskProgress: 0, usedCoupons: 0, history: [] };
         let userProfileData = { displayName: "訪客研究員", userId: "guest_" + Date.now() }; 
@@ -333,7 +275,6 @@
             for (let i = 0; i < levels.length; i++) { if (userData.expCount >= levels[i].reqCount) { currentLevel = levels[i]; nextLevel = levels[i+1] || null; } }
 
             document.getElementById("member-level").innerText = "🎓 " + currentLevel.name;
-            
             let availableCoupons = Math.max(0, currentLevel.coupons - (userData.usedCoupons || 0));
             document.getElementById("coupon-count").innerText = availableCoupons;
 
@@ -354,7 +295,7 @@
             const historyBox = document.getElementById("history-list");
             historyBox.innerHTML = userData.history.length === 0 ? "<div style='font-size:12px; color:#718096;'>目前尚無紀錄，快去掃描累積吧！</div>" : "";
             userData.history.slice(0, 3).forEach(item => { 
-                let colorStyle = (item.action.includes("爆擊") || item.action.includes("奇蹟") || item.action.includes("核銷")) ? "color: #E65100;" : "color: var(--primary-green);";
+                let colorStyle = (item.action.includes("爆擊") || item.action.includes("奇蹟") || item.action.includes("核銷") || item.action.includes("推廣")) ? "color: #E65100;" : "color: var(--primary-green);";
                 historyBox.innerHTML += `<div class="history-item"><div class="history-date">${item.date}</div><div class="history-desc" style="${colorStyle}">${item.action}</div></div>`; 
             });
         }
@@ -367,98 +308,62 @@
             if(id === 'full-history-modal') generateFullHistory();
             document.getElementById(id).style.display = 'flex'; 
         }
-        
         function closeModal(id) { 
             document.getElementById(id).style.display = 'none'; 
             if(id === 'result-modal') {
-                document.getElementById("result-title").className = "";
-                document.getElementById("result-title").style.color = "";
+                document.getElementById("result-title").className = ""; document.getElementById("result-title").style.color = "";
                 document.getElementById("result-icon").className = "";
+                // 關閉時重置分享按鈕顯示
+                document.getElementById("share-btn").style.display = "flex";
             }
-            if(id === 'verify-modal') {
-                document.getElementById("store-pin").value = ""; 
-            }
+            if(id === 'verify-modal') { document.getElementById("store-pin").value = ""; }
         }
 
+        // --- 以下為 UI 生成函數 (省略展開) ---
         function generateCoupons() {
             let currentLevel = levels[0];
             for(let i=0; i<levels.length; i++) { if(userData.expCount >= levels[i].reqCount) currentLevel = levels[i]; }
-            
             let availableCoupons = Math.max(0, currentLevel.coupons - (userData.usedCoupons || 0));
             const listUI = document.getElementById("coupon-list-ui");
-            
             if (availableCoupons > 0) {
                 let cards = "";
-                for(let c=0; c < availableCoupons; c++) { 
-                    cards += `
-                    <div class="coupon-card">
-                        <div>
-                            <div class="coupon-name">💎 ${currentLevel.name} 升級禮</div>
-                            <div class="coupon-desc">${currentLevel.reward}</div>
-                        </div>
-                        <button class="coupon-use-btn" onclick="openVerifyModal()">立即使用</button>
-                    </div>`; 
-                }
+                for(let c=0; c < availableCoupons; c++) { cards += `<div class="coupon-card"><div><div class="coupon-name">💎 ${currentLevel.name} 升級禮</div><div class="coupon-desc">${currentLevel.reward}</div></div><button class="coupon-use-btn" onclick="openVerifyModal()">立即使用</button></div>`; }
                 listUI.innerHTML = `<div class="coupon-list">${cards}</div>`;
             } else {
                 listUI.innerHTML = `<div class="coupon-empty"><div class="coupon-empty-icon">📭</div><div>目前票夾空空如也<br><span style="font-size:12px; font-weight:normal;">快去完成實驗解鎖下一階特權吧！</span></div></div>`;
             }
         }
-
-        function openVerifyModal() {
-            closeModal('coupon-modal');
-            openModal('verify-modal');
-            document.getElementById("store-pin").focus();
-        }
-
+        function openVerifyModal() { closeModal('coupon-modal'); openModal('verify-modal'); document.getElementById("store-pin").focus(); }
         function confirmVerification() {
             let pinInput = document.getElementById("store-pin").value;
             if (pinInput === "8888") {
                 userData.usedCoupons = (userData.usedCoupons || 0) + 1;
-                
                 const today = new Date();
                 const dateStr = `${today.getFullYear()}/${String(today.getMonth()+1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')} ${String(today.getHours()).padStart(2, '0')}:${String(today.getMinutes()).padStart(2, '0')}`;
                 userData.history.unshift({ date: dateStr, action: `[核銷] 使用了一張升級特權券` });
-
-                saveData();
-                updateUI();
-                syncToCloud();
-
+                saveData(); updateUI(); syncToCloud();
                 closeModal('verify-modal');
-                
-                document.getElementById("result-icon").innerText = "✅";
-                document.getElementById("result-icon").className = ""; 
-                document.getElementById("result-title").innerText = "核銷成功";
-                document.getElementById("result-title").style.color = "#2C7A4B";
+                document.getElementById("result-icon").innerText = "✅"; document.getElementById("result-icon").className = ""; 
+                document.getElementById("result-title").innerText = "核銷成功"; document.getElementById("result-title").style.color = "#2C7A4B";
                 document.getElementById("result-desc").innerHTML = "店員已成功核銷您的優惠券。<br>感謝您對永續循環的貢獻！";
-                document.getElementById("result-btn").className = "primary-btn";
-                document.getElementById("result-btn").style.background = "#2C7A4B";
-                
+                document.getElementById("result-btn").className = "primary-btn"; document.getElementById("result-btn").style.background = "#2C7A4B";
+                document.getElementById("share-btn").style.display = "none"; // 核銷不顯示炫耀按鈕
                 openModal("result-modal");
-            } else {
-                alert("⚠️ 密碼錯誤，請由店員操作確認！");
-                document.getElementById("store-pin").value = "";
-            }
+            } else { alert("⚠️ 密碼錯誤，請由店員操作確認！"); document.getElementById("store-pin").value = ""; }
         }
-
         function generateFullHistory() {
             const listUI = document.getElementById("full-history-list-ui");
             if (userData.history.length === 0) { listUI.innerHTML = "<div style='text-align:center; padding:20px; color:#718096; font-size:13px;'>尚無紀錄</div>"; return; }
             let html = "";
             userData.history.forEach(item => {
-                let isRare = item.action.includes("爆擊") || item.action.includes("奇蹟") || item.action.includes("核銷");
+                let isRare = item.action.includes("爆擊") || item.action.includes("奇蹟") || item.action.includes("核銷") || item.action.includes("推廣");
                 let colorStyle = isRare ? "color: #E65100; font-weight: 800;" : "color: var(--primary-green);";
                 html += `<div class="full-hist-item"><div style="font-size:11px; color:#718096; margin-bottom:4px; font-weight:600;">${item.date}</div><div style="font-size:14px; ${colorStyle}">${item.action}</div></div>`;
             });
             listUI.innerHTML = html;
         }
-
         function generateLeaderboard() {
-            let list = [
-                { name: "環境系 王同學", carbon: 3200 }, { name: "企管系 林同學", carbon: 2800 },
-                { name: "資管系 張同學", carbon: 2150 }, { name: "外語系 陳同學", carbon: 1800 },
-                { name: userProfileData.displayName + " (你)", carbon: userData.carbonSaved, isMe: true }
-            ];
+            let list = [ { name: "環境系 王同學", carbon: 3200 }, { name: "企管系 林同學", carbon: 2800 }, { name: "資管系 張同學", carbon: 2150 }, { name: "外語系 陳同學", carbon: 1800 }, { name: userProfileData.displayName + " (你)", carbon: userData.carbonSaved, isMe: true } ];
             list.sort((a,b) => b.carbon - a.carbon);
             let html = "";
             list.forEach((p, i) => {
@@ -468,34 +373,22 @@
             });
             document.getElementById("leaderboard-list").innerHTML = html;
         }
-
         function generateExpTable() {
             let html = ""; let currentLevelReached = 0;
             for(let i=0; i<levels.length; i++) { if(userData.expCount >= levels[i].reqCount) currentLevelReached = i; }
             levels.forEach((lvl, index) => {
-                let isActive = index === currentLevelReached ? 'active' : '';
-                let isDone = index < currentLevelReached ? '✅' : '🔒';
-                if(index === currentLevelReached) isDone = '⭐';
+                let isActive = index === currentLevelReached ? 'active' : ''; let isDone = index < currentLevelReached ? '✅' : '🔒'; if(index === currentLevelReached) isDone = '⭐';
                 html += `<div class="rank-item ${isActive}"><div style="font-size:20px; width: 30px; text-align:center;">${isDone}</div><div class="rank-info"><div class="rank-name">${lvl.name} <span class="rank-req">(${lvl.reqCount} 次)</span></div><div style="font-size:12px; color:var(--primary-green); margin-top:2px;">解鎖：${lvl.reward}</div></div></div>`;
             });
             document.getElementById("rank-list-ui").innerHTML = html;
         }
-
         function generateCarbonStats() {
             document.getElementById("modal-carbon-val").innerHTML = `${userData.carbonSaved} <span>g</span>`;
             let cups = Math.floor(userData.carbonSaved / 15); let bags = Math.floor(userData.carbonSaved / 20);
             document.getElementById("metric-cup").innerText = `${cups} 個`; document.getElementById("metric-bag").innerText = `${bags} 個`;
         }
 
-        function getGachaReward() {
-            let r = Math.random();
-            if (r < 0.005) return { exp: 10, carbon: 2000, title: "👑 世界級奇蹟發現！", icon: "💎", msg: "機率 0.5% 的終極大爆發！<br>史詩級貢獻：減碳 +2000g！", color: "transparent", bgClass: "ur-glow-btn", textClass: "ur-text", animClass: "icon-shake" };
-            if (r < 0.05) return { exp: 5, carbon: 800, title: "🔥 完美爆擊！", icon: "🚀", msg: "手氣發燙！達成超高難度萃取！<br>減碳大量提升 +800g", color: "#DD6B20", bgClass: "", textClass: "", animClass: "icon-shake" };
-            if (r < 0.20) return { exp: 3, carbon: 500, title: "🔮 基因突破！", icon: "✨", msg: "實驗發生神奇變化！<br>獲得額外減碳貢獻 +500g", color: "#805AD5", bgClass: "", textClass: "", animClass: "" };
-            if (r < 0.50) return { exp: 2, carbon: 300, title: "💧 純淨萃取", icon: "🧊", msg: "實驗結果非常純淨！<br>比平常更好的結果 +300g", color: "#3182CE", bgClass: "", textClass: "", animClass: "" };
-            return { exp: 1, carbon: 150, title: "✅ 實驗紀錄成功", icon: "🌱", msg: "穩紮穩打的標準操作！<br>獲得減碳貢獻 +150g", color: "#2C7A4B", bgClass: "", textClass: "", animClass: "" };
-        }
-
+        // ================= LIFF 與核心 =================
         async function main() {
             loadData(); 
             try {
@@ -522,6 +415,16 @@
             .catch(e => console.error("雲端同步失敗", e));
         }
 
+        // ================= 抽卡與掃描邏輯 =================
+        function getGachaReward() {
+            let r = Math.random();
+            if (r < 0.005) return { exp: 10, carbon: 2000, title: "👑 世界級奇蹟發現！", icon: "💎", msg: "機率 0.5% 的終極大爆發！<br>史詩級貢獻：減碳 +2000g！", color: "transparent", bgClass: "ur-glow-btn", textClass: "ur-text", animClass: "icon-shake" };
+            if (r < 0.05) return { exp: 5, carbon: 800, title: "🔥 完美爆擊！", icon: "🚀", msg: "手氣發燙！達成超高難度萃取！<br>減碳大量提升 +800g", color: "#DD6B20", bgClass: "", textClass: "", animClass: "icon-shake" };
+            if (r < 0.20) return { exp: 3, carbon: 500, title: "🔮 基因突破！", icon: "✨", msg: "實驗發生神奇變化！<br>獲得額外減碳貢獻 +500g", color: "#805AD5", bgClass: "", textClass: "", animClass: "" };
+            if (r < 0.50) return { exp: 2, carbon: 300, title: "💧 純淨萃取", icon: "🧊", msg: "實驗結果非常純淨！<br>比平常更好的結果 +300g", color: "#3182CE", bgClass: "", textClass: "", animClass: "" };
+            return { exp: 1, carbon: 150, title: "✅ 實驗紀錄成功", icon: "🌱", msg: "穩紮穩打的標準操作！<br>獲得減碳貢獻 +150g", color: "#2C7A4B", bgClass: "", textClass: "", animClass: "" };
+        }
+
         let html5QrCode;
         document.getElementById("manual-scan-btn").addEventListener("click", () => {
             document.getElementById("scanner-modal").style.display = "flex";
@@ -533,6 +436,8 @@
             closeScanner();
             
             let reward = getGachaReward();
+            lastDrawnRewardTitle = reward.title; // 儲存起來給分享用
+            
             userData.expCount += reward.exp;
             userData.carbonSaved += reward.carbon;
             userData.taskProgress += 1;
@@ -575,7 +480,57 @@
             document.getElementById("scanner-modal").style.display = "none";
         }
 
-        main();
+        // ================= 【全新】社群裂變分享邏輯 =================
+        function shareToLine() {
+            if (!liff.isLoggedIn()) { alert("⚠️ 請先在 LINE 內開啟此網頁。"); return; }
+            
+            // 檢查開發者後台的 ShareTargetPicker 是否有開
+            if (!liff.isApiAvailable('shareTargetPicker')) {
+                alert("⚠️ 請先至 LINE Developers 後台開啟 ShareTargetPicker 功能！");
+                return;
+            }
+
+            liff.shareTargetPicker([
+                {
+                    "type": "text",
+                    "text": "🌱 我在碼上循環實驗室抽中了【" + lastDrawnRewardTitle + "】！\n總共減少了 " + userData.carbonSaved + "g 的碳排🌍\n👉 點擊專屬連結，馬上開始你的永續實驗：\nhttps://liff.line.me/2009660466-OkU0MklB"
+                }
+            ]).then(function (res) {
+                if (res) {
+                    // 分享成功！給予獎勵
+                    userData.expCount += 1;
+                    userData.carbonSaved += 50;
+                    
+                    const today = new Date();
+                    const dateStr = `${today.getFullYear()}/${String(today.getMonth()+1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')} ${String(today.getHours()).padStart(2, '0')}:${String(today.getMinutes()).padStart(2, '0')}`;
+                    userData.history.unshift({ date: dateStr, action: `[推廣] 成功向好友推廣，獲得 50g` });
+                    
+                    saveData();
+                    updateUI();
+                    syncToCloud();
+                    
+                    closeModal('result-modal');
+                    
+                    // 顯示獎勵結果
+                    setTimeout(() => {
+                        document.getElementById("result-icon").innerText = "💌";
+                        document.getElementById("result-icon").className = ""; 
+                        document.getElementById("result-title").innerText = "推廣成功！";
+                        document.getElementById("result-title").style.color = "#06C755";
+                        document.getElementById("result-desc").innerHTML = "感謝您將永續理念分享出去！<br>已額外派發 <strong>+50g 減碳值與 1 EXP</strong>！";
+                        document.getElementById("result-btn").className = "primary-btn";
+                        document.getElementById("result-btn").style.background = "#06C755";
+                        document.getElementById("share-btn").style.display = "none"; 
+                        openModal("result-modal");
+                    }, 500);
+                } else {
+                    // 使用者中途取消分享
+                    console.log("TargetPicker was closed");
+                }
+            }).catch(function (error) {
+                console.error("分享失敗", error);
+            });
+        }
     </script>
 </body>
 </html>
