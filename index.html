@@ -21,6 +21,7 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-dark); line-height: 1.5; padding-bottom: 60px; position: relative; }
+        
         .header-bg { background: var(--gradient-green); height: 220px; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; position: absolute; top: 0; left: 0; right: 0; z-index: -1; box-shadow: 0 4px 15px rgba(44,122,75,0.2); overflow: hidden; }
         .header-bg::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('data:image/svg+xml;utf8,<svg width="480" height="190" viewBox="0 0 480 190" fill="none" xmlns="http://www.w3.org/2000/svg"><g opacity="0.15"><path d="M480 190C480 190 440 180 400 160C360 140 320 120 280 120C240 120 200 140 160 160C120 180 80 190 80 190V120C80 120 120 110 160 90C200 70 240 50 280 50C320 50 360 70 400 90C440 110 480 120 480 120V190Z" fill="%23FFFFFF"/><circle cx="20" cy="50" r="1.5" fill="%23FFFFFF" opacity="0.6"><animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite" /></circle><circle cx="150" cy="80" r="1" fill="%23FFFFFF" opacity="0.4"><animate attributeName="opacity" values="0.4;1;0.4" dur="2.5s" repeatCount="indefinite" /></circle><circle cx="300" cy="20" r="2" fill="%23FFFFFF" opacity="0.7"><animate attributeName="opacity" values="0.7;1;0.7" dur="1.8s" repeatCount="indefinite" /></circle><circle cx="450" cy="110" r="1.2" fill="%23FFFFFF" opacity="0.5"><animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite" /></circle></g></svg>'); background-size: cover; background-position: center; }
         .header-title { color: var(--gold-accent); text-align: center; font-size: 20px; font-weight: 700; padding-top: 25px; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.15); position: relative; z-index: 10; }
@@ -32,6 +33,8 @@
         .badge-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
         .level-badge { display: inline-flex; align-items: center; gap: 5px; background-color: var(--light-green); color: var(--primary-green); padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 700; }
         .leaderboard-btn { display: inline-flex; align-items: center; gap: 5px; background: linear-gradient(135deg, #FFD700, #FFA500); color: white; border: none; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(255,165,0,0.3); }
+        
+        /* 統計區塊 */
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .stat-box { background: #F8FAFC; padding: 15px 5px; border-radius: 16px; text-align: center; border: 1px solid #EDF2F7; cursor: pointer; transition: all 0.2s ease; position: relative; overflow: hidden; }
         .stat-box:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(44,122,75,0.1); border-color: var(--primary-green); }
@@ -41,16 +44,19 @@
         .stat-icon-wrapper svg { width: 22px; height: 22px; }
         .stat-value { font-size: 22px; font-weight: 800; color: var(--primary-green); line-height: 1.2; }
         .stat-label { font-size: 12px; color: var(--text-gray); font-weight: 600; margin-top: 4px;}
+        
         .task-container { background: linear-gradient(to right, #FFF8E1, #FFECB3); border: 1px solid #FFE082; padding: 15px; border-radius: 16px; margin-bottom: 20px; text-align: left; display: flex; justify-content: space-between; align-items: center; }
         .task-info { flex-grow: 1; }
         .task-title { font-size: 14px; font-weight: 700; color: #E65100; margin-bottom: 5px; display: flex; align-items: center; gap: 5px;}
         .task-desc { font-size: 12px; color: var(--text-dark); font-weight: 600; }
         .task-progress { background: white; padding: 5px 12px; border-radius: 12px; font-weight: 800; color: #E65100; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        
         .progress-container { text-align: left; background: #F8FAFC; padding: 15px; border-radius: 16px; margin-bottom: 15px;}
         .progress-labels { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 10px; font-weight: 700; color: var(--text-dark); }
         .progress-bar-bg { background: #E2E8F0; height: 10px; border-radius: 10px; overflow: hidden; position: relative; }
         .progress-bar-fill { background: var(--gradient-green); height: 100%; width: 0%; transition: width 0.8s ease-in-out; border-radius: 10px; }
         .estimate-msg { font-size: 12px; color: var(--accent-orange); margin-top: 8px; text-align: right; font-weight: 600; }
+        
         .history-container { text-align: left; border-top: 1.5px dashed #E2E8F0; padding-top: 15px; }
         .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .history-title { font-size: 14px; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; gap: 6px;}
@@ -59,8 +65,11 @@
         .history-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; }
         .history-date { color: var(--text-gray); font-size: 11px; min-width: 75px; font-weight: 600; margin-top: 2px;}
         .history-desc { color: var(--primary-green); font-weight: 600; line-height: 1.4;}
+        
         .scan-btn { background: var(--gradient-green); color: white; border: none; width: 100%; padding: 18px; border-radius: 16px; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 6px 15px rgba(44,122,75,0.3); display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 25px; transition: transform 0.1s; }
         .scan-btn:active { transform: scale(0.97); }
+
+        /* Modals */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 99999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
         .modal-content { background: white; width: 90%; max-width: 360px; border-radius: 24px; padding: 25px 20px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2); animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-height: 80vh; overflow-y: auto; }
         @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -68,17 +77,20 @@
         .modal-header h3 { color: var(--primary-green); font-size: 18px; margin: 0; display: flex; align-items: center; gap: 8px;}
         .close-icon-btn { background: none; border: none; font-size: 24px; color: var(--text-gray); cursor: pointer; }
         .primary-btn { color: white; border: none; width: 100%; padding: 14px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 15px; transition: 0.2s;}
+
         @keyframes urRainbow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         .ur-glow-btn { background: linear-gradient(270deg, #ff0055, #ff9900, #ffcc00, #33cc33, #3399ff, #9933ff, #ff0055); background-size: 400% 400%; animation: urRainbow 3s ease infinite; color: white; box-shadow: 0 4px 15px rgba(255,0,85,0.4); border: none; }
         .ur-text { background: linear-gradient(270deg, #ff0055, #ff9900, #33cc33, #3399ff, #9933ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 400% 400%; animation: urRainbow 3s ease infinite; }
         @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg) scale(1); } 20% { transform: translate(-3px, 0px) rotate(5deg) scale(1.1); } 40% { transform: translate(1px, -1px) rotate(-5deg) scale(1.1); } 60% { transform: translate(-3px, 1px) rotate(5deg) scale(1.1); } 80% { transform: translate(-1px, -1px) rotate(-5deg) scale(1.1); } 100% { transform: translate(1px, -2px) rotate(0deg) scale(1); } }
         .icon-shake { animation: shake 0.6s ease-in-out infinite; }
+
         .rank-list { text-align: left; display: flex; flex-direction: column; gap: 12px; }
         .rank-item { display: flex; align-items: center; padding: 12px; border-radius: 12px; background: #f8fafc; border-left: 4px solid #cbd5e0; }
         .rank-item.active { background: var(--light-green); border-left-color: var(--primary-green); box-shadow: 0 2px 8px rgba(44,122,75,0.1); }
         .rank-info { flex-grow: 1; margin-left: 10px; }
         .rank-name { font-weight: 700; font-size: 15px; color: var(--text-dark); }
         .rank-req { font-size: 12px; color: var(--text-gray); }
+
         .carbon-hero { font-size: 36px; font-weight: 800; color: var(--primary-green); margin-bottom: 5px; }
         .carbon-hero span { font-size: 16px; font-weight: 600; color: var(--text-gray); }
         .metric-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
@@ -86,6 +98,7 @@
         .metric-icon { font-size: 28px; margin-bottom: 5px; }
         .metric-num { font-size: 18px; font-weight: 700; color: var(--text-dark); }
         .metric-text { font-size: 12px; color: var(--text-gray); }
+
         .coupon-empty { padding: 30px 0; color: var(--text-gray); font-size: 14px; font-weight: 600; }
         .coupon-empty-icon { font-size: 40px; margin-bottom: 10px; opacity: 0.5; }
         .coupon-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
@@ -93,22 +106,30 @@
         .coupon-card::before { content: ''; position: absolute; left: -10px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; background: white; border-radius: 50%; }
         .coupon-name { font-size: 16px; font-weight: 700; }
         .coupon-desc { font-size: 12px; opacity: 0.9; }
-        .coupon-use-btn { background: white; color: #E65100; border: none; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; }
+        .coupon-use-btn { background: white; color: #E65100; border: none; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; transition: 0.2s;}
+        .coupon-use-btn:active { transform: scale(0.95); }
+
+        /* 店員核銷專屬 UI */
+        .pin-input { font-size: 24px; letter-spacing: 8px; text-align: center; width: 100%; padding: 10px; border-radius: 10px; border: 2px solid #CBD5E0; margin: 15px 0; font-weight: bold; color: var(--primary-green);}
+        .pin-input:focus { outline: none; border-color: var(--primary-green); }
+
         .how-to-get-box { background: var(--light-green); border-radius: 12px; padding: 15px; text-align: left; }
         .how-to-get-box h4 { color: var(--primary-green); margin-bottom: 8px; font-size: 14px; display: flex; align-items: center; gap: 5px;}
         .how-to-get-box ul { font-size: 12px; color: var(--text-dark); padding-left: 20px; margin: 0; line-height: 1.6; }
+
         .leaderboard-list { text-align: left; display: flex; flex-direction: column; gap: 10px; }
         .lb-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background: #F8FAFC; border-radius: 12px; font-size: 14px; font-weight: 600;}
         .lb-item.top-1 { background: linear-gradient(to right, #FFF8E1, white); border-left: 4px solid #FFD700; }
         .lb-item.top-2 { background: linear-gradient(to right, #F1F5F9, white); border-left: 4px solid #C0C0C0; }
         .lb-item.top-3 { background: linear-gradient(to right, #FFF5EC, white); border-left: 4px solid #CD7F32; }
         .lb-item.me { border: 2px solid var(--primary-green); }
+
         .full-history-container { display: flex; flex-direction: column; gap: 12px; text-align: left; }
         .full-hist-item { background: #F8FAFC; border: 1px solid #EDF2F7; border-radius: 12px; padding: 12px 15px; }
+
         #loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg-color); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .spinner { width: 45px; height: 45px; border: 4px solid #EDF2F7; border-top: 4px solid var(--primary-green); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        /* 雲端同步提示 */
         .sync-toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #2D3748; color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; opacity: 0; transition: opacity 0.3s; z-index: 100000; pointer-events: none;}
     </style>
 </head>
@@ -211,6 +232,16 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="verify-modal" style="z-index: 100000;">
+        <div class="modal-content" style="max-width: 300px;">
+            <h3 style="color: var(--accent-orange); margin-bottom: 10px;">⚠️ 店員核銷專區</h3>
+            <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 10px;">請將手機交由實體店員輸入核銷碼</p>
+            <input type="number" id="store-pin" class="pin-input" placeholder="輸入4碼" pattern="[0-9]*" inputmode="numeric">
+            <button class="primary-btn" style="background: var(--accent-orange);" onclick="confirmVerification()">確認核銷</button>
+            <button class="primary-btn" style="background: #E2E8F0; color: #4A5568;" onclick="closeModal('verify-modal')">取消</button>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="leaderboard-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -259,7 +290,7 @@
             <div id="coupon-list-ui"></div>
             <div class="how-to-get-box">
                 <h4><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> 如何取得優惠券？</h4>
-                <ul><li><strong>累積實驗：</strong>掃描杯身條碼達標，系統自動發放。</li><li><strong>階級特權：</strong>升級副教授即可常駐解鎖折扣。</li><li><strong>每日任務：</strong>完成每日指定掃描次數獲取加碼。</li></ul>
+                <ul><li><strong>累積實驗：</strong>掃描杯身條碼達標，系統自動發放。</li><li><strong>階級特權：</strong>升級副教授即可常駐解鎖折扣。</li></ul>
             </div>
         </div>
     </div>
@@ -282,7 +313,8 @@
         // 【關鍵】這是你的 Google Apps Script 專屬 API 網址
         const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbzqnicbJ689GtLMzcmFHXo02zS72Xe8WgSK93kGBR3F8ysDfZ78oLXzSaL96prsNERHAw/exec";
 
-        let userData = { expCount: 0, carbonSaved: 0, taskTarget: 3, taskProgress: 0, history: [] };
+        // 【新增】usedCoupons 用來記錄已經被店員核銷過的數量
+        let userData = { expCount: 0, carbonSaved: 0, taskTarget: 3, taskProgress: 0, usedCoupons: 0, history: [] };
         let userProfileData = { displayName: "訪客研究員", userId: "guest_" + Date.now() }; 
 
         function loadData() { let saved = localStorage.getItem("circular_lab_data"); if (saved) userData = JSON.parse(saved); }
@@ -290,9 +322,9 @@
 
         const levels = [
             { name: "助理研究員", reqCount: 0, coupons: 0, reward: "首購享10元折扣" }, 
-            { name: "研究員", reqCount: 3, coupons: 1, reward: "全品項飲品 95 折" },
-            { name: "副教授", reqCount: 10, coupons: 2, reward: "全品項飲品 9 折" },
-            { name: "首席教授", reqCount: 20, coupons: 5, reward: "專屬隱藏特調免費兌換" }
+            { name: "研究員", reqCount: 3, coupons: 1, reward: "飲品 95 折 (升級禮)" },
+            { name: "副教授", reqCount: 10, coupons: 2, reward: "飲品 9 折 (升級禮)" },
+            { name: "首席教授", reqCount: 20, coupons: 5, reward: "隱藏特調免費 (升級禮)" }
         ];
 
         function updateUI() {
@@ -304,7 +336,10 @@
             for (let i = 0; i < levels.length; i++) { if (userData.expCount >= levels[i].reqCount) { currentLevel = levels[i]; nextLevel = levels[i+1] || null; } }
 
             document.getElementById("member-level").innerText = "🎓 " + currentLevel.name;
-            document.getElementById("coupon-count").innerText = currentLevel.coupons;
+            
+            // 【關鍵修改】畫面上顯示的可用優惠 = 該階級給的總票券數 - 已經用掉的票券數
+            let availableCoupons = Math.max(0, currentLevel.coupons - (userData.usedCoupons || 0));
+            document.getElementById("coupon-count").innerText = availableCoupons;
 
             const progressBar = document.getElementById("progress-bar");
             const nextLevelTargetText = document.getElementById("next-level-target");
@@ -323,20 +358,12 @@
             const historyBox = document.getElementById("history-list");
             historyBox.innerHTML = userData.history.length === 0 ? "<div style='font-size:12px; color:#718096;'>目前尚無紀錄，快去掃描累積吧！</div>" : "";
             userData.history.slice(0, 3).forEach(item => { 
-                let colorStyle = (item.action.includes("爆擊") || item.action.includes("奇蹟") || item.action.includes("突破")) ? "color: #E65100;" : "color: var(--primary-green);";
+                let colorStyle = (item.action.includes("爆擊") || item.action.includes("奇蹟") || item.action.includes("核銷")) ? "color: #E65100;" : "color: var(--primary-green);";
                 historyBox.innerHTML += `<div class="history-item"><div class="history-date">${item.date}</div><div class="history-desc" style="${colorStyle}">${item.action}</div></div>`; 
             });
         }
 
-        function getGachaReward() {
-            let r = Math.random();
-            if (r < 0.005) return { exp: 10, carbon: 2000, title: "👑 世界級奇蹟發現！", icon: "💎", msg: "機率 0.5% 的終極大爆發！<br>史詩級貢獻：減碳 +2000g！", color: "transparent", bgClass: "ur-glow-btn", textClass: "ur-text", animClass: "icon-shake" };
-            if (r < 0.05) return { exp: 5, carbon: 800, title: "🔥 完美爆擊！", icon: "🚀", msg: "手氣發燙！達成超高難度萃取！<br>減碳大量提升 +800g", color: "#DD6B20", bgClass: "", textClass: "", animClass: "icon-shake" };
-            if (r < 0.20) return { exp: 3, carbon: 500, title: "🔮 基因突破！", icon: "✨", msg: "實驗發生神奇變化！<br>獲得額外減碳貢獻 +500g", color: "#805AD5", bgClass: "", textClass: "", animClass: "" };
-            if (r < 0.50) return { exp: 2, carbon: 300, title: "💧 純淨萃取", icon: "🧊", msg: "實驗結果非常純淨！<br>比平常更好的結果 +300g", color: "#3182CE", bgClass: "", textClass: "", animClass: "" };
-            return { exp: 1, carbon: 150, title: "✅ 實驗紀錄成功", icon: "🌱", msg: "穩紮穩打的標準操作！<br>獲得減碳貢獻 +150g", color: "#2C7A4B", bgClass: "", textClass: "", animClass: "" };
-        }
-
+        // ================= 視窗生成與核銷邏輯 =================
         function openModal(id) { 
             if(id === 'leaderboard-modal') generateLeaderboard();
             if(id === 'exp-modal') generateExpTable();
@@ -345,11 +372,87 @@
             if(id === 'full-history-modal') generateFullHistory();
             document.getElementById(id).style.display = 'flex'; 
         }
+        
         function closeModal(id) { 
             document.getElementById(id).style.display = 'none'; 
-            document.getElementById("result-title").className = "";
-            document.getElementById("result-title").style.color = "";
-            document.getElementById("result-icon").className = "";
+            if(id === 'result-modal') {
+                document.getElementById("result-title").className = "";
+                document.getElementById("result-title").style.color = "";
+                document.getElementById("result-icon").className = "";
+            }
+            if(id === 'verify-modal') {
+                document.getElementById("store-pin").value = ""; // 清空密碼欄位
+            }
+        }
+
+        function generateCoupons() {
+            let currentLevel = levels[0];
+            for(let i=0; i<levels.length; i++) { if(userData.expCount >= levels[i].reqCount) currentLevel = levels[i]; }
+            
+            // 算出真正還能用的券
+            let availableCoupons = Math.max(0, currentLevel.coupons - (userData.usedCoupons || 0));
+            const listUI = document.getElementById("coupon-list-ui");
+            
+            if (availableCoupons > 0) {
+                let cards = "";
+                for(let c=0; c < availableCoupons; c++) { 
+                    // 點擊後不再是 alert，而是叫出輸入密碼的 modal
+                    cards += `
+                    <div class="coupon-card">
+                        <div>
+                            <div class="coupon-name">💎 ${currentLevel.name} 升級禮</div>
+                            <div class="coupon-desc">${currentLevel.reward}</div>
+                        </div>
+                        <button class="coupon-use-btn" onclick="openVerifyModal()">立即使用</button>
+                    </div>`; 
+                }
+                listUI.innerHTML = `<div class="coupon-list">${cards}</div>`;
+            } else {
+                listUI.innerHTML = `<div class="coupon-empty"><div class="coupon-empty-icon">📭</div><div>目前票夾空空如也<br><span style="font-size:12px; font-weight:normal;">快去完成實驗解鎖下一階特權吧！</span></div></div>`;
+            }
+        }
+
+        // 【新增】開啟核銷密碼視窗
+        function openVerifyModal() {
+            closeModal('coupon-modal');
+            openModal('verify-modal');
+            document.getElementById("store-pin").focus();
+        }
+
+        // 【新增】店員確認密碼邏輯
+        function confirmVerification() {
+            let pinInput = document.getElementById("store-pin").value;
+            // 假設你們店家的專屬核銷密碼是 8888 (未來決賽時可以自己改)
+            if (pinInput === "8888") {
+                // 核銷成功：扣除票券
+                userData.usedCoupons = (userData.usedCoupons || 0) + 1;
+                
+                // 寫入歷史紀錄
+                const today = new Date();
+                const dateStr = `${today.getFullYear()}/${String(today.getMonth()+1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')} ${String(today.getHours()).padStart(2, '0')}:${String(today.getMinutes()).padStart(2, '0')}`;
+                userData.history.unshift({ date: dateStr, action: `[核銷] 使用了一張升級特權券` });
+
+                // 存檔與同步
+                saveData();
+                updateUI();
+                syncToCloud();
+
+                closeModal('verify-modal');
+                
+                // 顯示成功彈窗
+                document.getElementById("result-icon").innerText = "✅";
+                document.getElementById("result-icon").className = ""; 
+                document.getElementById("result-title").innerText = "核銷成功";
+                document.getElementById("result-title").style.color = "#2C7A4B";
+                document.getElementById("result-desc").innerHTML = "店員已成功核銷您的優惠券。<br>感謝您對永續循環的貢獻！";
+                document.getElementById("result-btn").className = "primary-btn";
+                document.getElementById("result-btn").style.background = "#2C7A4B";
+                
+                openModal("result-modal");
+            } else {
+                alert("⚠️ 密碼錯誤，請由店員操作確認！");
+                document.getElementById("store-pin").value = "";
+            }
         }
 
         function generateFullHistory() {
@@ -357,13 +460,16 @@
             if (userData.history.length === 0) { listUI.innerHTML = "<div style='text-align:center; padding:20px; color:#718096; font-size:13px;'>尚無紀錄</div>"; return; }
             let html = "";
             userData.history.forEach(item => {
-                let isRare = item.action.includes("爆擊") || item.action.includes("奇蹟") || item.action.includes("突破");
+                let isRare = item.action.includes("爆擊") || item.action.includes("奇蹟") || item.action.includes("核銷");
                 let colorStyle = isRare ? "color: #E65100; font-weight: 800;" : "color: var(--primary-green);";
                 html += `<div class="full-hist-item"><div style="font-size:11px; color:#718096; margin-bottom:4px; font-weight:600;">${item.date}</div><div style="font-size:14px; ${colorStyle}">${item.action}</div></div>`;
             });
             listUI.innerHTML = html;
         }
 
+        function generateLeaderboard() { ... } // 省略重複程式碼，維持現狀
+        // (為了版面乾淨，這裡的 Leaderboard/Exp/Carbon/Gacha/Init 等程式碼我幫你全部保留在原始碼區塊中，你直接全選複製就不會漏掉)
+        
         function generateLeaderboard() {
             let list = [
                 { name: "環境系 王同學", carbon: 3200 }, { name: "企管系 林同學", carbon: 2800 },
@@ -397,18 +503,14 @@
             let cups = Math.floor(userData.carbonSaved / 15); let bags = Math.floor(userData.carbonSaved / 20);
             document.getElementById("metric-cup").innerText = `${cups} 個`; document.getElementById("metric-bag").innerText = `${bags} 個`;
         }
-
-        function generateCoupons() {
-            let currentLevel = levels[0];
-            for(let i=0; i<levels.length; i++) { if(userData.expCount >= levels[i].reqCount) currentLevel = levels[i]; }
-            const listUI = document.getElementById("coupon-list-ui");
-            if (currentLevel.coupons > 0) {
-                let cards = "";
-                for(let c=0; c<currentLevel.coupons; c++) { cards += `<div class="coupon-card"><div><div class="coupon-name">研究員特權優惠券</div><div class="coupon-desc">${currentLevel.reward}</div></div><button class="coupon-use-btn" onclick="alert('請向店員出示此畫面核銷！')">立即使用</button></div>`; }
-                listUI.innerHTML = `<div class="coupon-list">${cards}</div>`;
-            } else {
-                listUI.innerHTML = `<div class="coupon-empty"><div class="coupon-empty-icon">📭</div><div>目前票夾空空如也<br><span style="font-size:12px; font-weight:normal;">快去完成實驗累積點數吧！</span></div></div>`;
-            }
+        
+        function getGachaReward() {
+            let r = Math.random();
+            if (r < 0.005) return { exp: 10, carbon: 2000, title: "👑 世界級奇蹟發現！", icon: "💎", msg: "機率 0.5% 的終極大爆發！<br>史詩級貢獻：減碳 +2000g！", color: "transparent", bgClass: "ur-glow-btn", textClass: "ur-text", animClass: "icon-shake" };
+            if (r < 0.05) return { exp: 5, carbon: 800, title: "🔥 完美爆擊！", icon: "🚀", msg: "手氣發燙！達成超高難度萃取！<br>減碳大量提升 +800g", color: "#DD6B20", bgClass: "", textClass: "", animClass: "icon-shake" };
+            if (r < 0.20) return { exp: 3, carbon: 500, title: "🔮 基因突破！", icon: "✨", msg: "實驗發生神奇變化！<br>獲得額外減碳貢獻 +500g", color: "#805AD5", bgClass: "", textClass: "", animClass: "" };
+            if (r < 0.50) return { exp: 2, carbon: 300, title: "💧 純淨萃取", icon: "🧊", msg: "實驗結果非常純淨！<br>比平常更好的結果 +300g", color: "#3182CE", bgClass: "", textClass: "", animClass: "" };
+            return { exp: 1, carbon: 150, title: "✅ 實驗紀錄成功", icon: "🌱", msg: "穩紮穩打的標準操作！<br>獲得減碳貢獻 +150g", color: "#2C7A4B", bgClass: "", textClass: "", animClass: "" };
         }
 
         async function main() {
@@ -430,7 +532,6 @@
             }
         }
 
-        // ================= 將資料送上 Google 雲端的函數 =================
         function syncToCloud() {
             let payload = {
                 uid: userProfileData.userId,
@@ -439,35 +540,19 @@
                 carbon: userData.carbonSaved,
                 history: userData.history
             };
-
-            // 使用 fetch 打 API 傳送資料
-            fetch(GOOGLE_API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify(payload)
-            })
+            fetch(GOOGLE_API_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) })
             .then(res => {
-                // 顯示畫面底部的成功小提示
                 let toast = document.getElementById("sync-toast");
                 toast.style.opacity = "1";
                 setTimeout(() => { toast.style.opacity = "0"; }, 3000);
-            })
-            .catch(e => console.error("雲端同步失敗", e));
+            }).catch(e => console.error("雲端同步失敗", e));
         }
 
         let html5QrCode;
         document.getElementById("manual-scan-btn").addEventListener("click", () => {
             document.getElementById("scanner-modal").style.display = "flex";
             html5QrCode = new Html5Qrcode("reader");
-            html5QrCode.start(
-                { facingMode: "environment" }, 
-                { fps: 10, qrbox: { width: 250, height: 250 } }, 
-                onScanSuccess, 
-                () => {}
-            ).catch(e => { 
-                alert("無法開啟相機，請確認權限設定。"); 
-                closeScanner(); 
-            });
+            html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } }, onScanSuccess, () => {}).catch(e => { alert("無法開啟相機，請確認權限設定。"); closeScanner(); });
         });
 
         function onScanSuccess(decodedText) {
@@ -494,8 +579,6 @@
 
             saveData(); 
             updateUI();
-            
-            // 【關鍵】在這裡呼叫同步雲端函數！
             syncToCloud();
             
             let titleEl = document.getElementById("result-title");
