@@ -4,311 +4,297 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>循環數據平台 | 碼上循環實驗室</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #1F5F46;     /* 企業綠 */
+            --primary: #195840;     /* 深企業綠 */
+            --primary-gradient: linear-gradient(135deg, #1F5F46, #348E66);
             --primary-light: #E8F5E9;
-            --secondary: #4CAF50;   /* 亮綠色(進度條等) */
-            --bg: #F4F7F6;          /* 淺灰底色 */
+            --secondary: #4CAF50;   /* 亮綠色 */
+            --bg: #F4F7F6;          
             --card: #FFFFFF;
             --text-main: #111827;
             --text-muted: #6B7280;
             --border: #E5E7EB;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Noto Sans TC', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans TC', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; }
 
-        body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            /* 模擬手機版置中 (適用於電腦上看時) */
-            display: flex;
-            justify-content: center;
-        }
+        /* App 容器 */
+        .app-container { width: 100%; max-width: 480px; min-height: 100vh; background-color: var(--bg); padding-bottom: 80px; position: relative; }
 
-        /* 手機版容器限制 */
-        .app-container {
-            width: 100%;
-            max-width: 480px;
-            min-height: 100vh;
-            background-color: var(--bg);
-            padding: 20px;
-            padding-bottom: 80px; /* 留給下方可能的選單空間 */
-        }
-
-        /* 共用卡片樣式 */
-        .card {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            border: 1px solid var(--border);
-        }
-
-        .section-title {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--text-main);
+        /* 1. 頂部導航 (新加入) */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
         }
+        .header-title { font-size: 18px; font-weight: 900; color: var(--primary); letter-spacing: 1px; }
+        .header-icon { font-size: 20px; color: var(--text-muted); cursor: pointer; }
 
-        /* 1. 頂部個人資訊 */
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--primary-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: var(--primary);
-            font-weight: bold;
-        }
+        /* 內容區 */
+        .content { padding: 20px; }
+
+        /* 共用卡片 */
+        .card { background: var(--card); border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid rgba(229, 231, 235, 0.5); }
+        .section-title { font-size: 17px; font-weight: 700; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .section-title span.more { font-size: 13px; color: var(--secondary); font-weight: 500; cursor: pointer; }
+
+        /* 個人資訊 */
+        .profile-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .avatar { border-radius: 50%; object-fit: cover; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .avatar-main { width: 65px; height: 65px; background-color: #eee; }
         .user-info .name { font-size: 20px; font-weight: 700; }
-        .user-info .level { 
-            font-size: 13px; 
-            color: var(--primary);
-            background: var(--primary-light);
-            padding: 4px 10px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-top: 4px;
-            font-weight: 500;
-        }
+        .user-info .level { font-size: 12px; color: var(--primary); background: var(--primary-light); padding: 4px 10px; border-radius: 20px; display: inline-block; margin-top: 5px; font-weight: 700; border: 1px solid #C8E6C9; }
 
-        /* 2. 環境影響力 (爆點) */
-        .impact-banner {
-            background: var(--primary);
-            color: white;
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 16px;
-            text-align: center;
-        }
-        .impact-banner span { font-size: 13px; opacity: 0.9; }
-        .impact-banner h3 { font-size: 18px; margin-top: 4px; font-weight: 700; }
+        /* 影響力 Banner */
+        .impact-banner { background: var(--primary-gradient); color: white; border-radius: 16px; padding: 18px; margin-bottom: 20px; text-align: center; box-shadow: 0 8px 20px rgba(31, 95, 70, 0.2); position: relative; overflow: hidden; }
+        .impact-banner::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 10%, transparent 60%); pointer-events: none; }
+        .impact-banner h3 { font-size: 22px; margin-top: 5px; font-weight: 900; }
 
-        /* 3. 核心數據 Dashboard */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-        }
-        .stat-box {
-            text-align: center;
-            padding: 12px 8px;
-            background: #F9FAFB;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
-        .stat-value {
+        /* 核心數據 (可點擊) */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .stat-box { text-align: center; padding: 15px 8px; background: #F9FAFB; border-radius: 12px; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; position: relative; }
+        .stat-box:active { background: #E5E7EB; transform: scale(0.95); }
+        .stat-box::after { content: '›'; position: absolute; top: 5px; right: 8px; color: #9CA3AF; font-size: 16px; }
+        .stat-value { font-size: 18px; font-weight: 900; color: var(--primary); margin-bottom: 4px; }
+        .stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+        /* 掃描按鈕 (動態、活潑) */
+        .scan-action-area { margin: 25px 0; text-align: center; }
+        .btn-scan {
+            width: 90%;
+            margin: 0 auto;
+            padding: 18px;
+            border-radius: 100px;
+            border: none;
             font-size: 18px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 4px;
-        }
-        .stat-label {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        /* 4. 核心按鈕 (CTA) */
-        .action-area {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        .btn {
-            width: 100%;
-            padding: 16px;
-            border-radius: 12px;
-            border: none;
-            font-size: 16px;
-            font-weight: 700;
+            font-weight: 900;
+            color: white;
+            background: var(--primary-gradient);
+            box-shadow: 0 10px 25px rgba(31, 95, 70, 0.3);
             cursor: pointer;
-            transition: transform 0.1s, opacity 0.2s;
-        }
-        .btn:active { transform: scale(0.98); }
-        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(31, 95, 70, 0.2); }
-        .btn-outline { background: white; color: var(--primary); border: 2px solid var(--primary); }
-
-        /* 5. 任務系統 */
-        .task-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border);
-        }
-        .task-item:last-child { border-bottom: none; padding-bottom: 0; }
-        .task-info .task-name { font-size: 14px; font-weight: 500; }
-        .task-info .task-reward { font-size: 12px; color: var(--text-muted); margin-top: 4px;}
-        .task-action .btn-small {
-            padding: 6px 12px;
-            font-size: 12px;
-            border-radius: 8px;
-            background: var(--primary-light);
-            color: var(--primary);
-            border: none;
-            font-weight: 600;
-        }
-        .task-action .btn-done { background: #E5E7EB; color: #9CA3AF; }
-
-        /* 進度條 */
-        .progress-container { margin-top: 10px; }
-        .progress-bar {
-            height: 6px;
-            background: #E5E7EB;
-            border-radius: 6px;
+            position: relative;
             overflow: hidden;
-            margin-top: 6px;
-        }
-        .progress-fill {
-            height: 100%;
-            background: var(--secondary);
-            width: 0%; /* 透過 JS 觸發動畫 */
-            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* 6. 排行榜 */
-        .leaderboard-item {
             display: flex;
             align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border);
+            justify-content: center;
+            gap: 10px;
+            animation: pulse 2s infinite;
         }
-        .leaderboard-item:last-child { border-bottom: none; padding-bottom: 0; }
-        .rank-num { font-weight: 700; width: 24px; color: var(--text-muted); }
-        .rank-top1 { color: #F59E0B; } /* 金色 */
-        .rank-top2 { color: #9CA3AF; } /* 銀色 */
-        .rank-top3 { color: #B45309; } /* 銅色 */
-        .rank-name { flex: 1; font-size: 14px; margin-left: 8px; }
-        .rank-score { font-size: 14px; font-weight: 700; color: var(--primary); }
+        /* 掃描按鈕閃爍反光效果 */
+        .btn-scan::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent); transform: skewX(-20deg); animation: shine 3s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 10px 25px rgba(31, 95, 70, 0.3); } 50% { transform: scale(1.02); box-shadow: 0 15px 35px rgba(31, 95, 70, 0.5); } 100% { transform: scale(1); box-shadow: 0 10px 25px rgba(31, 95, 70, 0.3); } }
+        @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
 
+        /* 橫向商品展示區 (結合你上傳的圖) */
+        .horizontal-scroll { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+        .horizontal-scroll::-webkit-scrollbar { display: none; }
+        .product-card { min-width: 240px; background: white; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; scroll-snap-align: start; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .product-img { width: 100%; height: 140px; object-fit: cover; background: #eee; }
+        .product-info { padding: 12px; }
+        .product-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+        .product-tag { font-size: 11px; background: #FFF3E0; color: #E65100; padding: 2px 6px; border-radius: 4px; }
+
+        /* 任務系統 */
+        .task-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed var(--border); }
+        .task-item:last-child { border-bottom: none; }
+        .task-name { font-size: 15px; font-weight: 700; color: var(--text-main); }
+        .task-reward { font-size: 12px; color: var(--secondary); margin-top: 4px; font-weight: 500;}
+        .btn-small { padding: 8px 16px; font-size: 13px; border-radius: 8px; background: var(--primary-light); color: var(--primary); border: none; font-weight: 700; cursor: pointer; }
+
+        /* Modal 彈出視窗 (用於詳細數據) */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 1000; display: none; justify-content: center; align-items: flex-end; }
+        .modal-content { background: white; width: 100%; max-width: 480px; border-radius: 24px 24px 0 0; padding: 25px; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .modal-overlay.active { display: flex; }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        .modal-close { display: block; width: 40px; height: 5px; background: #E5E7EB; border-radius: 5px; margin: 0 auto 20px auto; }
+        .modal-title { font-size: 20px; font-weight: 900; margin-bottom: 15px; color: var(--primary); }
+        .modal-body { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; }
+        
+        /* 數據列表樣式 */
+        .data-list { list-style: none; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;}
+        .data-list li { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; }
+        .data-list li span:last-child { font-weight: 700; color: var(--text-main); }
     </style>
 </head>
 <body>
 
 <div class="app-container">
+    
+    <div class="header">
+        <div class="header-title">🧪 碼上循環實驗室</div>
+        <div class="header-icon">🔔</div>
+    </div>
 
-    <div class="profile-header">
-        <div class="avatar">杜</div>
-        <div class="user-info">
-            <div class="name">杜政原</div>
-            <div class="level">助理研究員 (Lv.2)</div>
+    <div class="content">
+        <div class="profile-header">
+            <img src="https://via.placeholder.com/150" alt="用戶頭像" class="avatar avatar-main">
+            <div class="user-info">
+                <div class="name">用戶名稱</div>
+                <div class="level">✨ 助理研究員 (Lv.2)</div>
+            </div>
         </div>
-    </div>
 
-    <div class="impact-banner">
-        <span>您的永續行動，已相當於</span>
-        <h3>🌳 2.5 棵樹一天的碳吸收量</h3>
-    </div>
+        <div class="impact-banner">
+            <span style="opacity: 0.9;">您的永續行動，已相當於</span>
+            <h3>🌳 2.5 棵樹一天的碳吸收量</h3>
+        </div>
 
-    <div class="card">
-        <div class="section-title">循環數據總覽</div>
-        <div class="stats-grid">
-            <div class="stat-box">
-                <div class="stat-value">580g</div>
-                <div class="stat-label">累積減碳量</div>
+        <div class="card">
+            <div class="section-title">循環數據總覽 <span class="more">資料說明 ℹ️</span></div>
+            <div class="stats-grid">
+                <div class="stat-box" onclick="openModal('carbon')">
+                    <div class="stat-value">580g</div>
+                    <div class="stat-label">累積減碳量</div>
+                </div>
+                <div class="stat-box" onclick="openModal('cycle')">
+                    <div class="stat-value">12次</div>
+                    <div class="stat-label">高效循環</div>
+                </div>
+                <div class="stat-box" onclick="openModal('reward')">
+                    <div class="stat-value">2張</div>
+                    <div class="stat-label">可用回饋</div>
+                </div>
             </div>
-            <div class="stat-box">
-                <div class="stat-value">12次</div>
-                <div class="stat-label">高效循環</div>
+        </div>
+
+        <div class="scan-action-area">
+            <button class="btn-scan" onclick="alert('啟動相機模組...')">
+                📷 掃描容器，紀錄循環
+            </button>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">掃描包裝條碼即可累積數據與回饋</p>
+        </div>
+
+        <div class="card" style="background: transparent; border: none; padding: 0; box-shadow: none;">
+            <div class="section-title" style="padding: 0 5px;">實驗室精選成果 <span class="more">查看全部 ›</span></div>
+            <div class="horizontal-scroll">
+                <div class="product-card">
+                    <img src="S__309493767_0.jpg" alt="科學再生實驗工作坊" class="product-img">
+                    <div class="product-info">
+                        <div class="product-title">科學再生實驗工作坊</div>
+                        <span class="product-tag">體驗課程</span>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">從廚餘到新生命！親子共創永續價值。</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="S__309493768_0.jpg" alt="醜果能量培養杯" class="product-img">
+                    <div class="product-info">
+                        <div class="product-title">醜果能量培養杯</div>
+                        <span class="product-tag">人氣商品</span>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">種下醜理，培養新生命，廚餘再利用。</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="S__309493766_0.jpg" alt="醜果多樣DIY培養皿" class="product-img">
+                    <div class="product-info">
+                        <div class="product-title">醜果多樣 DIY 培養皿</div>
+                        <span class="product-tag">永續教具</span>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">打造培養皿裡的微型生態圈。</p>
+                    </div>
+                </div>
             </div>
-            <div class="stat-box">
-                <div class="stat-value">2張</div>
-                <div class="stat-label">可用回饋</div>
+        </div>
+
+        <div class="card">
+            <div class="section-title">今日研究任務</div>
+            <div class="task-item">
+                <div>
+                    <div class="task-name">自備環保杯購買飲品</div>
+                    <div class="task-reward">+45g 減碳量</div>
+                </div>
+                <button class="btn-small">去完成</button>
+            </div>
+            <div class="task-item">
+                <div>
+                    <div class="task-name">參加再生工作坊 (0/1)</div>
+                    <div class="task-reward">解鎖「循環大師」徽章</div>
+                </div>
+                <button class="btn-small">報名</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-title">校園減碳排行榜</div>
+            <div style="text-align: center; color: var(--text-muted); padding: 20px 0; font-size: 14px;">
+                目前排名第 15 名！再累積 120g 即可晉升前十名。
             </div>
         </div>
         
-        <div class="progress-container">
-            <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);">
-                <span>升級進度：研究員</span>
-                <span>580 / 1000g</span>
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="level-progress"></div>
-            </div>
-        </div>
     </div>
+</div>
 
-    <div class="action-area">
-        <button class="btn btn-primary" onclick="alert('開啟相機掃描格外品/循環容器條碼')">📷 掃描容器紀錄</button>
-        <button class="btn btn-outline" onclick="alert('產生專屬永續行為分析報告')">📊 永續行為分析報告</button>
+<div class="modal-overlay" id="dataModal" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-close" onclick="closeModal(event)"></div>
+        <div id="modal-inner-content">
+            </div>
     </div>
-
-    <div class="card">
-        <div class="section-title">今日研究任務</div>
-        <div class="task-item">
-            <div class="task-info">
-                <div class="task-name">自備環保杯購買飲品</div>
-                <div class="task-reward">獎勵：+45g 減碳量</div>
-            </div>
-            <div class="task-action">
-                <button class="btn-small">去完成</button>
-            </div>
-        </div>
-        <div class="task-item">
-            <div class="task-info">
-                <div class="task-name">選擇格外品調飲 (1/1)</div>
-                <div class="task-reward">獎勵：10元 折扣券</div>
-            </div>
-            <div class="task-action">
-                <button class="btn-small btn-done">已領取</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="section-title">校園減碳排行榜</div>
-        <div class="leaderboard-item">
-            <div class="rank-num rank-top1">1</div>
-            <div class="avatar" style="width: 32px; height: 32px; font-size: 14px;">林</div>
-            <div class="rank-name">林同學 (高科大)</div>
-            <div class="rank-score">1,250g</div>
-        </div>
-        <div class="leaderboard-item">
-            <div class="rank-num rank-top2">2</div>
-            <div class="avatar" style="width: 32px; height: 32px; font-size: 14px;">陳</div>
-            <div class="rank-name">陳同學 (高大)</div>
-            <div class="rank-score">980g</div>
-        </div>
-        <div class="leaderboard-item" style="background: #F0FDF4; margin: -10px -20px; padding: 10px 20px; border-radius: 8px;">
-            <div class="rank-num">15</div>
-            <div class="avatar" style="width: 32px; height: 32px; font-size: 14px;">杜</div>
-            <div class="rank-name" style="font-weight: 700; color: var(--primary);">杜政原 (你)</div>
-            <div class="rank-score">580g</div>
-        </div>
-    </div>
-
 </div>
 
 <script>
-    // 簡單的進度條動畫：頁面載入後延遲觸發，製造視覺回饋感
-    window.onload = function() {
-        setTimeout(() => {
-            document.getElementById('level-progress').style.width = '58%';
-        }, 300);
+    // 定義真實數據內容 (政府規範與商業邏輯)
+    const modalData = {
+        carbon: {
+            title: "🌍 減碳量計算標準",
+            desc: "您的累積減碳量為 <b>580g CO₂e</b>。<br><br>依據台灣環境部「產品碳足跡資訊網」規範，減少使用一個一次性塑膠杯約可減碳 45g。您已成功減少相當於 12 個塑膠杯的碳排放，並協助去化在地格外品。",
+            list: [
+                { label: "環保杯折抵", value: "10 次 (450g)" },
+                { label: "格外品再生消費", value: "2 次 (130g)" },
+                { label: "超越同儕比例", value: "前 25%" }
+            ]
+        },
+        cycle: {
+            title: "♻️ 高效循環行為",
+            desc: "您已完成 <b>12 次</b> 高效循環操作。我們將每一次的環保選擇，轉化為實驗室的具體數據。",
+            list: [
+                { label: "飲品容器循環", value: "8 次" },
+                { label: "醜果商品購買", value: "3 次" },
+                { label: "參與再生工作坊", value: "1 次" }
+            ]
+        },
+        reward: {
+            title: "🎁 可用回饋與優惠",
+            desc: "您的減碳行動已為您爭取到 <b>2 張</b> 實體回饋券，可於門市或線上商城直接折抵使用。",
+            list: [
+                { label: "飲品折抵金", value: "$15 元 (1張)" },
+                { label: "工作坊體驗券", value: "9 折券 (1張)" },
+                { label: "下次點數發放", value: "還差 120g" }
+            ]
+        }
     };
+
+    const modal = document.getElementById('dataModal');
+    const modalContent = document.getElementById('modal-inner-content');
+
+    function openModal(type) {
+        const data = modalData[type];
+        let listHtml = data.list.map(item => `<li><span>${item.label}</span><span>${item.value}</span></li>`).join('');
+        
+        modalContent.innerHTML = `
+            <h2 class="modal-title">${data.title}</h2>
+            <div class="modal-body">${data.desc}</div>
+            <ul class="data-list">
+                ${listHtml}
+            </ul>
+            <button onclick="closeModal(event)" style="width:100%; margin-top:20px; padding:15px; background:var(--primary); color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px;">關閉報表</button>
+        `;
+        modal.classList.add('active');
+    }
+
+    function closeModal(e) {
+        if(e) e.stopPropagation();
+        modal.classList.remove('active');
+    }
 </script>
 
 </body>
