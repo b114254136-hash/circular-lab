@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Circular Impact Dashboard | 碼上循環實驗室</title>
-    
+    <title>循環數據平台 | 碼上循環實驗室</title>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script src="https://unpkg.com/html5-qrcode"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-    
     <style>
         :root {
             --primary: #195840;     
@@ -25,11 +22,11 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans TC', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; }
 
-        .app-container { width: 100%; max-width: 480px; min-height: 100vh; background-color: var(--bg); padding-bottom: 100px; }
+        .app-container { width: 100%; max-width: 480px; min-height: 100vh; background-color: var(--bg); padding-bottom: 80px; position: relative; }
 
-        /* --- 1. 專業級 Header --- */
+        /* Header */
         .header {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             padding: 16px 20px;
             display: flex;
@@ -44,132 +41,127 @@
 
         .content { padding: 20px; }
 
-        /* --- 2. 使用者個資區 (LIFF 同步) --- */
-        .profile-header { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
-        .avatar { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: #eee; }
-        .user-info .name { font-size: 20px; font-weight: 900; }
-        .user-info .level { font-size: 12px; color: var(--primary); background: var(--primary-light); padding: 4px 12px; border-radius: 20px; display: inline-block; margin-top: 5px; font-weight: 700; border: 1px solid #C8E6C9; }
-
-        /* --- 3. 環境影響力 Banner --- */
-        .impact-banner { 
-            background: var(--primary-gradient); 
-            color: white; border-radius: 20px; padding: 22px; margin-bottom: 25px; text-align: center; 
-            box-shadow: 0 10px 25px rgba(31, 95, 70, 0.25); position: relative; overflow: hidden; 
+        /* Profile Area */
+        .profile-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .avatar { 
+            width: 65px; 
+            height: 65px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 2px solid white; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background-color: #ddd; /* 載入前的底色 */
         }
-        .impact-banner h3 { font-size: 24px; margin-top: 8px; font-weight: 900; }
+        .user-info .name { font-size: 20px; font-weight: 700; }
+        .user-info .level { font-size: 12px; color: var(--primary); background: var(--primary-light); padding: 4px 10px; border-radius: 20px; display: inline-block; margin-top: 5px; font-weight: 700; border: 1px solid #C8E6C9; }
 
-        /* --- 4. 數據儀表板 (點擊開彈窗) --- */
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
-        .stat-box { 
-            text-align: center; padding: 18px 8px; background: white; border-radius: 16px; 
-            border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-        }
-        .stat-box:active { transform: scale(0.95); background: #f0f0f0; }
-        .stat-value { font-size: 19px; font-weight: 900; color: var(--primary); margin-bottom: 4px; }
-        .stat-label { font-size: 11px; color: var(--text-muted); font-weight: 700; }
+        /* Impact Banner */
+        .impact-banner { background: var(--primary-gradient); color: white; border-radius: 16px; padding: 18px; margin-bottom: 20px; text-align: center; box-shadow: 0 8px 20px rgba(31, 95, 70, 0.2); }
+        .impact-banner h3 { font-size: 22px; margin-top: 5px; font-weight: 900; }
 
-        /* --- 5. 精準掃描器 (置中大按鈕) --- */
-        #reader { width: 100%; border-radius: 20px; overflow: hidden; margin-bottom: 15px; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .scan-action { text-align: center; margin: 30px 0; }
+        /* Stats Card */
+        .card { background: var(--card); border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid rgba(229, 231, 235, 0.5); }
+        .section-title { font-size: 17px; font-weight: 700; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .stat-box { text-align: center; padding: 15px 8px; background: #F9FAFB; border-radius: 12px; border: 1px solid var(--border); cursor: pointer; }
+        .stat-value { font-size: 18px; font-weight: 900; color: var(--primary); margin-bottom: 4px; }
+        .stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+        /* Scan Button */
+        .scan-action-area { margin: 25px 0; text-align: center; }
         .btn-scan {
-            width: 85%; padding: 20px; border-radius: 100px; border: none; font-size: 18px; font-weight: 900;
-            color: white; background: var(--primary-gradient); box-shadow: 0 12px 30px rgba(31, 95, 70, 0.3);
-            cursor: pointer; animation: pulse 2s infinite; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            width: 90%;
+            padding: 18px;
+            border-radius: 100px;
+            border: none;
+            font-size: 18px;
+            font-weight: 900;
+            color: white;
+            background: var(--primary-gradient);
+            box-shadow: 0 10px 25px rgba(31, 95, 70, 0.3);
+            cursor: pointer;
+            animation: pulse 2s infinite;
         }
 
-        /* --- 6. 產品展示區 (橫向滑動) --- */
-        .horizontal-scroll { display: flex; gap: 15px; overflow-x: auto; padding: 10px 5px 20px 5px; margin: 0 -5px; }
+        /* Horizontal Scroll Products */
+        .horizontal-scroll { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; }
         .horizontal-scroll::-webkit-scrollbar { display: none; }
-        .product-card { min-width: 260px; background: white; border-radius: 18px; overflow: hidden; box-shadow: 0 6px 15px rgba(0,0,0,0.05); border: 1px solid var(--border); }
-        .product-img { width: 100%; height: 160px; object-fit: cover; }
-        .product-info { padding: 15px; }
-        .product-title { font-size: 16px; font-weight: 800; margin-bottom: 5px; }
+        .product-card { min-width: 240px; background: white; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
+        .product-img { width: 100%; height: 140px; object-fit: cover; }
+        .product-info { padding: 12px; }
+        .product-title { font-size: 15px; font-weight: 700; }
 
-        /* --- 7. 任務與排行 (長頁面內容) --- */
-        .card-long { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border); }
-        .task-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px dashed #eee; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
-        /* 動畫 */
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-
-        /* Modal 彈窗 */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 1000; display: none; align-items: flex-end; }
-        .modal-content { background: white; width: 100%; border-radius: 30px 30px 0 0; padding: 30px; transform: translateY(100%); transition: 0.3s ease-out; }
+        /* Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 1000; display: none; justify-content: center; align-items: flex-end; }
+        .modal-content { background: white; width: 100%; max-width: 480px; border-radius: 24px 24px 0 0; padding: 25px; transform: translateY(100%); transition: transform 0.3s ease-out; }
         .modal-overlay.active { display: flex; }
         .modal-overlay.active .modal-content { transform: translateY(0); }
+        .data-list { list-style: none; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;}
+        .data-list li { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <div class="header">
-        <div class="header-title">🧪 碼上循環實驗室 [cite: 3]</div>
-        <div style="font-size: 20px;">👤</div>
+        <div class="header-title">🧪 碼上循環實驗室</div>
     </div>
 
     <div class="content">
         <div class="profile-header">
-            <img id="userPicture" src="" class="avatar">
+            <img id="userPicture" src="https://via.placeholder.com/150" alt="用戶頭像" class="avatar">
             <div class="user-info">
                 <div id="userName" class="name">載入中...</div>
-                <div class="level">✨ 研究員 (Lv.2) [cite: 51, 123]</div>
+                <div class="level">✨ 助理研究員 (Lv.2)</div>
             </div>
         </div>
 
         <div class="impact-banner">
-            <span style="font-weight: 500; opacity: 0.9;">您的永續貢獻量已達標</span>
-            <h3>🌳 2.5 棵樹一天的碳吸收 [cite: 123]</h3>
+            <span>您的永續行動，已相當於</span>
+            <h3>🌳 2.5 棵樹一天的碳吸收量</h3>
         </div>
 
-        <div class="stats-grid">
-            <div class="stat-box" onclick="openModal('carbon')">
-                <div id="carbonVal" class="stat-value">0g</div>
-                <div class="stat-label">累積減碳量 </div>
-            </div>
-            <div class="stat-box" onclick="openModal('cycle')">
-                <div id="cycleVal" class="stat-value">0次</div>
-                <div class="stat-label">循環次數 </div>
-            </div>
-            <div class="stat-box" onclick="openModal('reward')">
-                <div class="stat-value">2張</div>
-                <div class="stat-label">可用回饋 [cite: 123]</div>
+        <div class="card">
+            <div class="section-title">循環數據總覽</div>
+            <div class="stats-grid">
+                <div class="stat-box" onclick="openModal('carbon')">
+                    <div class="stat-value">580g</div>
+                    <div class="stat-label">累積減碳量</div>
+                </div>
+                <div class="stat-box" onclick="openModal('cycle')">
+                    <div class="stat-value">12次</div>
+                    <div class="stat-label">高效循環</div>
+                </div>
+                <div class="stat-box" onclick="openModal('reward')">
+                    <div class="stat-value">2張</div>
+                    <div class="stat-label">可用回饋</div>
+                </div>
             </div>
         </div>
 
-        <div id="reader"></div>
-
-        <div class="scan-action">
-            <button class="btn-scan" onclick="startPreciseScan()">
-                📷 啟動精準掃描錄入 
+        <div class="scan-action-area">
+            <button class="btn-scan" onclick="liff.scanCodeV2().then(result => alert('掃描結果：' + result.value))">
+                📷 掃描容器，紀錄循環
             </button>
         </div>
 
-        <h3 style="margin: 20px 0 10px 5px; font-weight: 900;">實驗室熱門計畫 [cite: 107]</h3>
-        <div class="horizontal-scroll">
-            <div class="product-card">
-                <img src="S__309493767_0.jpg" class="product-img">
-                <div class="product-info"><div class="product-title">科學再生實驗工作坊 [cite: 113, 125]</div><div style="font-size:12px;color:#666;">親子共創永續新價值</div></div>
-            </div>
-            <div class="product-card">
-                <img src="S__309493768_0.jpg" class="product-img">
-                <div class="product-info"><div class="product-title">醜果能量培養杯 [cite: 108, 113]</div><div style="font-size:12px;color:#666;">格外品轉化黃金 [cite: 91]</div></div>
-            </div>
-            <div class="product-card">
-                <img src="S__309493766_0.jpg" class="product-img">
-                <div class="product-info"><div class="product-title">醜果多樣 DIY 培養皿 [cite: 108, 113]</div><div style="font-size:12px;color:#666;">微型生態循環體驗 [cite: 113]</div></div>
-            </div>
-        </div>
-
-        <div class="card-long">
-            <h3 style="margin-bottom: 15px;">每日研究任務 </h3>
-            <div class="task-item">
-                <div><div style="font-weight:700;">自備環保杯購買飲品</div><div style="font-size:12px;color:var(--secondary);">+45g 減碳量 </div></div>
-                <button style="padding:8px 15px; border-radius:10px; border:none; background:var(--primary-light); color:var(--primary); font-weight:700;">去完成</button>
-            </div>
-            <div class="task-item">
-                <div><div style="font-weight:700;">掃描格外品包裝</div><div style="font-size:12px;color:var(--secondary);">+15 點實驗積點</div></div>
-                <button style="padding:8px 15px; border-radius:10px; border:none; background:var(--primary-light); color:var(--primary); font-weight:700;">去完成</button>
+        <div class="card" style="border:none; padding:0; background:transparent; box-shadow:none;">
+            <div class="section-title">實驗室精選成果</div>
+            <div class="horizontal-scroll">
+                <div class="product-card">
+                    <img src="S__309493767_0.jpg" alt="工作坊" class="product-img">
+                    <div class="product-info"><div class="product-title">科學再生實驗工作坊</div></div>
+                </div>
+                <div class="product-card">
+                    <img src="S__309493768_0.jpg" alt="培養杯" class="product-img">
+                    <div class="product-info"><div class="product-title">醜果能量培養杯</div></div>
+                </div>
+                <div class="product-card">
+                    <img src="S__309493766_0.jpg" alt="培養皿" class="product-img">
+                    <div class="product-info"><div class="product-title">醜果多樣 DIY 培養皿</div></div>
+                </div>
             </div>
         </div>
     </div>
@@ -177,69 +169,49 @@
 
 <div class="modal-overlay" id="dataModal" onclick="closeModal()">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <div id="modal-body"></div>
-        <button onclick="closeModal()" style="width:100%; margin-top:25px; padding:16px; background:var(--primary); color:white; border:none; border-radius:15px; font-weight:900;">確認關閉</button>
+        <div id="modal-inner-content"></div>
     </div>
 </div>
 
 <script>
-    const LIFF_ID = "你的_LIFF_ID"; 
-    const GAS_URL = "https://script.google.com/macros/s/AKfycby4F5cm4YDfIiYhAyZkH9e9UIBv6_tVxa8457INVnthJ9_nK_PFlEMGiXMTpqRYN2iUOQ/exec"; 
-
-    // 初始化 LIFF 並抓取 Excel 數據
-    async function init() {
-        await liff.init({ liffId: LIFF_ID });
-        if (!liff.isLoggedIn()) {
-            liff.login();
-        } else {
-            const profile = await liff.getProfile();
-            document.getElementById('userName').innerText = profile.displayName;
-            document.getElementById('userPicture').src = profile.pictureUrl;
-            syncBackend(profile.userId);
+    // --- 關鍵：LIFF 初始化邏輯 ---
+    async function initializeLiff() {
+        try {
+            await liff.init({ liffId: "你的_LIFF_ID" }); // 這裡要換成你在 LINE Developers 後台申請的 ID
+            if (!liff.isLoggedIn()) {
+                liff.login();
+            } else {
+                const profile = await liff.getProfile();
+                document.getElementById('userName').innerText = profile.displayName;
+                document.getElementById('userPicture').src = profile.pictureUrl;
+            }
+        } catch (err) {
+            console.log('LIFF 初始化失敗', err);
+            document.getElementById('userName').innerText = "訪客用戶";
         }
     }
 
-    async function syncBackend(uid) {
-        try {
-            const res = await fetch(`${GAS_URL}?uid=${uid}`);
-            const json = await res.json();
-            if (json.status === "success") {
-                document.getElementById('carbonVal').innerText = json.data.carbon + "g";
-                document.getElementById('cycleVal').innerText = json.data.cycle + "次";
-            }
-        } catch (e) { console.error("後台連線失敗"); }
-    }
+    window.onload = initializeLiff;
 
-    // 精準掃描器：一掃即跳等級
-    function startPreciseScan() {
-        const reader = document.getElementById('reader');
-        reader.style.display = 'block';
-        const html5QrCode = new Html5Qrcode("reader");
-        html5QrCode.start(
-            { facingMode: "environment" }, 
-            { fps: 20, qrbox: { width: 280, height: 280 } },
-            (text) => {
-                alert("✅ 掃描成功！紀錄已上傳：\n" + text);
-                html5QrCode.stop();
-                reader.style.display = 'none';
-                // 此處可呼叫後端更新 Excel 的 API
-            }
-        ).catch(err => console.error("掃描啟動失敗"));
-    }
+    // --- Modal 邏輯 ---
+    const modalData = {
+        carbon: { title: "🌍 減碳報表", desc: "依據環境部標準，您減少了 12 個塑膠杯排放。" },
+        cycle: { title: "♻️ 循環紀錄", desc: "本月共計完成 12 次有效回收行為。" },
+        reward: { title: "🎁 我的回饋", desc: "您目前擁有 2 張折扣券可使用。" }
+    };
 
     function openModal(type) {
-        const data = {
-            carbon: { t: "🌍 減碳報表 ", d: "根據環境部規範，您的行為已抵消 580g 二氧化碳排放。" },
-            cycle: { t: "♻️ 循環統計 ", d: "您本月共計完成了 12 次高效循環操作。" },
-            reward: { t: "🎁 會員回饋 [cite: 123]", d: "目前有 2 張優惠券可於楠梓校區特約商店使用。" }
-        };
-        document.getElementById('modal-body').innerHTML = `<h2 style="color:var(--primary);margin-bottom:15px;">${data[type].t}</h2><p style="color:#666;line-height:1.6;">${data[type].d}</p>`;
+        const data = modalData[type];
+        document.getElementById('modal-inner-content').innerHTML = `
+            <h2 style="color:var(--primary)">${data.title}</h2>
+            <p style="margin:15px 0; color:var(--text-muted)">${data.desc}</p>
+            <button onclick="closeModal()" style="width:100%; padding:12px; background:var(--primary); color:white; border:none; border-radius:8px;">關閉</button>
+        `;
         document.getElementById('dataModal').classList.add('active');
     }
 
     function closeModal() { document.getElementById('dataModal').classList.remove('active'); }
-
-    window.onload = init;
 </script>
+
 </body>
 </html>
