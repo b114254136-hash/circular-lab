@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* (CSS 保持原樣，維持你原本優秀的設計) */
         :root {
             --primary-green: #2C7A4B;
             --gradient-green: linear-gradient(135deg, #2C7A4B 0%, #48BB78 100%);
@@ -51,7 +50,7 @@
         .history-list { display: flex; flex-direction: column; gap: 10px; }
         .history-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; }
         .history-date { color: var(--text-gray); font-size: 11px; min-width: 75px; font-weight: 600; margin-top: 2px;}
-        .history-desc { color: var(--primary-green); font-weight: 600; line-height: 1.4;}
+        .history-desc { font-weight: 600; line-height: 1.4;} /* 移除預設綠色，改由 JS 動態上色 */
         
         .ai-report-btn { background: linear-gradient(135deg, #805AD5 0%, #B794F4 100%); color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 15px; box-shadow: 0 4px 10px rgba(128,90,213,0.3); display: flex; align-items: center; justify-content: center; gap: 8px;}
         .map-explore-btn { background: white; color: var(--text-dark); border: 2px solid #EDF2F7; width: 100%; padding: 14px; border-radius: 16px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; transition: all 0.2s;}
@@ -153,7 +152,7 @@
         <div class="modal-content" style="max-width: 300px;">
             <div id="result-icon" style="font-size: 60px; margin-bottom: 5px;">🌱</div>
             <h3 id="result-title" style="margin-bottom: 10px; font-size: 22px;">掃描成功</h3>
-            <p id="result-desc" style="font-size: 14px; font-weight: 600; color: var(--text-dark); margin-bottom: 15px;"></p>
+            <p id="result-desc" style="font-size: 14px; font-weight: 600; color: var(--text-dark); margin-bottom: 15px; line-height: 1.6;"></p>
             <button class="primary-btn" style="background: var(--primary-green);" onclick="closeModal('result-modal')">確認收下</button>
         </div>
     </div>
@@ -171,15 +170,16 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="ai-modal"><div class="modal-content"><div class="modal-header"><h3 style="color: #805AD5;">🤖 AI 教授分析中</h3><button class="close-icon-btn" onclick="closeModal('ai-modal')">&times;</button></div><div style="font-size: 50px;">👨‍🔬</div><div id="ai-report-content" style="text-align: left; font-size: 14px; background: #F3EBFF; padding: 15px; border-radius: 12px; margin-top: 10px; font-weight: 600;">正在調閱您的資料...</div><button class="primary-btn" style="background: #805AD5;" onclick="closeModal('ai-modal')">確認報告</button></div></div>
+    <div class="modal-overlay" id="ai-modal"><div class="modal-content"><div class="modal-header"><h3 style="color: #805AD5;">🤖 AI 教授分析中</h3><button class="close-icon-btn" onclick="closeModal('ai-modal')">&times;</button></div><div style="font-size: 50px;">👨‍🔬</div><div id="ai-report-content" style="text-align: left; font-size: 14px; background: #F3EBFF; padding: 15px; border-radius: 12px; margin-top: 10px; font-weight: 600; line-height: 1.6;">正在調閱您的資料...</div><button class="primary-btn" style="background: #805AD5;" onclick="closeModal('ai-modal')">確認報告</button></div></div>
 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
     <script>
         // ================= 系統設定區 =================
-        const LIFF_ID = "2009660466-OkU0MklB"; // 替換成你的 LIFF ID
-        const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycby4F5cm4YDfIiYhAyZkH9e9UIBv6_tVxa8457INVnthJ9_nK_PFlEMGiXMTpqRYN2iUOQ/exec"; // GAS 網址
+        // ⚠️ 請確保這裡填入正確的 LIFF ID 與 GAS API 網址
+        const LIFF_ID = "2009660466-OkU0MklB"; 
+        const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycby4F5cm4YDfIiYhAyZkH9e9UIBv6_tVxa8457INVnthJ9_nK_PFlEMGiXMTpqRYN2iUOQ/exec"; 
         
         let isDemoOfflineMode = false; // 決賽離線展示模式旗標
         let userData = { expCount: 0, carbonSaved: 0, usedCoupons: 0, history: [] };
@@ -208,8 +208,6 @@
 
                     loadLocalData();
                     updateUI();
-                    
-                    // 未來可加入：fetchUserDataFromGoogleSheets(userProfileData.userId);
                     
                     document.getElementById("loading-overlay").style.display = "none";
                     showToast("✅ 成功連線至實驗室");
@@ -248,7 +246,10 @@
         function syncToCloud() {
             if(isDemoOfflineMode) return; // 離線模式不打 API
             let payload = { type: "sync_data", uid: userProfileData.userId, name: userProfileData.displayName, data: userData };
-            fetch(GOOGLE_API_URL, { method: "POST", body: JSON.stringify(payload) }).catch(e => console.log("背景同步失敗"));
+            fetch(GOOGLE_API_URL, { method: "POST", body: JSON.stringify(payload) })
+                .then(res => res.json())
+                .then(res => { if(res.status === 'success') console.log("資料同步成功"); })
+                .catch(e => console.log("背景同步失敗"));
         }
 
         function updateUI() {
@@ -276,11 +277,13 @@
             const historyBox = document.getElementById("history-list");
             historyBox.innerHTML = userData.history.length === 0 ? "<div style='font-size:12px; color:#718096;'>目前尚無紀錄</div>" : "";
             userData.history.slice(0, 3).forEach(item => { 
-                historyBox.innerHTML += `<div class="history-item"><div class="history-date">${item.date}</div><div class="history-desc">${item.action}</div></div>`; 
+                // 動態判斷顏色：爆擊或基因突破上橘/紫色，一般紀錄上綠色
+                let colorStyle = item.color || "var(--primary-green)";
+                historyBox.innerHTML += `<div class="history-item"><div class="history-date">${item.date}</div><div class="history-desc" style="color: ${colorStyle}">${item.action}</div></div>`; 
             });
         }
 
-        // ================= 3. 掃描與互動邏輯 =================
+        // ================= 3. 掃描與互動邏輯 (包含抽卡爆擊機制) =================
         let html5QrCode;
         document.getElementById("manual-scan-btn").addEventListener("click", () => {
             document.getElementById("scanner-modal").style.display = "flex";
@@ -300,23 +303,44 @@
             document.getElementById("scanner-modal").style.display = "none";
         }
 
+        // 抽卡爆擊邏輯
+        function getGachaReward(baseCarbon) {
+            let r = Math.random();
+            // 5% 機率 UR 級完美爆擊 (碳足跡 5 倍，EXP 5 點)
+            if (r < 0.05) return { exp: 5, carbon: baseCarbon * 5, title: "🔥 完美爆擊！", icon: "🚀", msg: "手氣發燙！達成超高難度萃取！", color: "#E65100" };
+            // 20% 機率 SR 級基因突破 (碳足跡 3 倍，EXP 3 點)
+            if (r < 0.20) return { exp: 3, carbon: baseCarbon * 3, title: "🔮 基因突破！", icon: "✨", msg: "實驗發生神奇變化！", color: "#805AD5" };
+            // 75% 機率 N 級一般成功
+            return { exp: 1, carbon: baseCarbon, title: "✅ 實驗紀錄成功", icon: "🌱", msg: "穩紮穩打的標準操作！", color: "#2C7A4B" };
+        }
+
         function onScanSuccess(decodedText) {
             closeScanner();
             
-            // 【實戰修正】模擬固定 QR Code，但產生浮動碳足跡 (30g ~ 50g)
-            let randomCarbon = Math.floor(Math.random() * 21) + 30; 
-            let expGained = 1;
+            // 1. 先產生基礎的浮動碳足跡 (30g ~ 50g)
+            let baseCarbon = Math.floor(Math.random() * 21) + 30; 
+            
+            // 2. 進入抽卡爆擊判定！
+            let reward = getGachaReward(baseCarbon);
 
-            userData.expCount += expGained; 
-            userData.carbonSaved += randomCarbon;
-            userData.history.unshift({ date: new Date().toLocaleDateString(), action: `[紀錄] 減少 ${randomCarbon}g 碳排` });
+            // 3. 更新數據
+            userData.expCount += reward.exp; 
+            userData.carbonSaved += reward.carbon;
+            userData.history.unshift({ 
+                date: new Date().toLocaleDateString(), 
+                action: `[紀錄] ${reward.title} 獲得 ${reward.carbon}g`,
+                color: reward.color
+            });
             
             saveLocalData(); 
             updateUI(); 
             syncToCloud();
             
-            document.getElementById("result-title").innerText = "✅ 實驗紀錄成功";
-            document.getElementById("result-desc").innerText = `感謝參與！本次減少了 ${randomCarbon}g 的碳排放，獲得 ${expGained} 點 EXP。`;
+            // 4. 顯示華麗的結果彈窗
+            document.getElementById("result-icon").innerText = reward.icon;
+            document.getElementById("result-title").innerText = reward.title;
+            document.getElementById("result-title").style.color = reward.color;
+            document.getElementById("result-desc").innerText = `${reward.msg}\n本次減少了 ${reward.carbon}g 的碳排，獲得 ${reward.exp} 點 EXP！`;
             openModal("result-modal");
         }
 
@@ -363,7 +387,7 @@
         function confirmVerification() {
             if (document.getElementById("store-pin").value === "8888") {
                 userData.usedCoupons = (userData.usedCoupons || 0) + 1;
-                userData.history.unshift({ date: new Date().toLocaleDateString(), action: `[核銷] 使用特權券` });
+                userData.history.unshift({ date: new Date().toLocaleDateString(), action: `[核銷] 使用特權券`, color: "var(--accent-orange)" });
                 saveLocalData(); updateUI(); syncToCloud();
                 closeModal('verify-modal'); showToast("✅ 核銷成功！");
             } else { alert("⚠️ 密碼錯誤！"); }
@@ -372,11 +396,11 @@
 
         function generateAIReport() {
             openModal('ai-modal');
-            document.getElementById("ai-report-content").innerHTML = "🔍 Gemini 正在分析您的實驗數據...";
+            document.getElementById("ai-report-content").innerHTML = "🔍 Gemini AI 正在調閱您的《碼上循環科學期刊》...";
             setTimeout(() => {
-                document.getElementById("ai-report-content").innerHTML = `<b>學術評估報告：</b><br>您目前累積了 ${userData.carbonSaved}g 的減碳量，相當於拯救了一小塊土地的碳排負擔。請繼續保持對循環經濟的熱忱！`;
-            }, 1500);
+                document.getElementById("ai-report-content").innerHTML = `<b>學術評估報告：</b><br>您目前累積了 ${userData.carbonSaved}g 的減碳量。<br><br>根據循環經濟模型計算，您已成功避免了相當於 ${(userData.carbonSaved * 0.005).toFixed(2)} 顆樹木一天的碳吸收量！請繼續保持您的「綠趨勢」實驗熱忱！🌱`;
+            }, 1800);
         }
     </script>
 </body>
-</html>
+</html>ㄦ
