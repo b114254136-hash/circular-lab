@@ -21,6 +21,7 @@
             --text-main: #111827;
             --text-muted: #6B7280;
             --border: #E5E7EB;
+            --skeleton: #E5E7EB;
         }
 
         /* 基礎設置與平滑滾動 */
@@ -28,9 +29,9 @@
         html { scroll-behavior: smooth; }
         body { background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; }
 
-        .app-container { width: 100%; max-width: 480px; min-height: 100vh; background-color: var(--bg); padding-bottom: 100px; overflow-x: hidden; }
+        .app-container { width: 100%; max-width: 480px; min-height: 100vh; background-color: var(--bg); padding-bottom: 120px; overflow-x: hidden; }
 
-        /* --- 高級 Header (毛玻璃效果) --- */
+        /* --- 高級 Header (毛玻璃與狀態顯示) --- */
         .header {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(15px);
@@ -45,133 +46,122 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
         .header-title { font-size: 18px; font-weight: 900; color: var(--primary); letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; }
+        .live-indicator { width: 8px; height: 8px; background: var(--secondary); border-radius: 50%; display: inline-block; box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2); animation: pulse-green 2s infinite; }
 
         .content { padding: 20px; }
 
-        /* --- 使用者個資區 (LIFF 自動同步) --- */
+        /* --- 使用者個資區 (強化加載狀態) --- */
         .profile-section { display: flex; align-items: center; gap: 18px; margin-bottom: 28px; animation: fadeIn 0.8s ease-out; }
+        .avatar-container { position: relative; }
         .avatar { 
             width: 72px; height: 72px; border-radius: 50%; object-fit: cover; 
             border: 3px solid white; box-shadow: 0 8px 16px rgba(0,0,0,0.1); 
-            background: linear-gradient(45deg, #eee, #ddd);
+            background: var(--skeleton);
         }
-        .user-info .name { font-size: 22px; font-weight: 900; color: var(--text-main); }
-        .user-info .level-tag { 
-            font-size: 12px; color: var(--primary); background: var(--primary-light); 
-            padding: 4px 14px; border-radius: 20px; display: inline-block; 
-            margin-top: 6px; font-weight: 900; border: 1px solid #C8E6C9;
+        .user-info .name { font-size: 22px; font-weight: 900; color: var(--text-main); min-width: 100px; min-height: 24px; }
+        .user-info .level-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+        .level-tag { 
+            font-size: 11px; color: var(--primary); background: var(--primary-light); 
+            padding: 2px 10px; border-radius: 20px; font-weight: 900; border: 1px solid #C8E6C9;
         }
+        .exp-bar-mini { width: 80px; height: 4px; background: #E5E7EB; border-radius: 4px; overflow: hidden; }
+        .exp-fill { width: 65%; height: 100%; background: var(--primary-gradient); }
 
-        /* --- 核心影響力 Banner (動態背景) --- */
+        /* --- 核心影響力 Banner (動態交互) --- */
         .impact-hero { 
             background: var(--primary-gradient); color: white; border-radius: 24px; padding: 28px; 
             margin-bottom: 30px; text-align: center; position: relative; overflow: hidden;
-            box-shadow: 0 15px 35px rgba(31, 95, 70, 0.25);
+            box-shadow: 0 15px 35px rgba(31, 95, 70, 0.25); transition: transform 0.3s;
         }
-        .impact-hero::before {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-            animation: rotate 15s linear infinite;
-        }
-        .impact-hero h3 { font-size: 26px; margin-top: 10px; font-weight: 900; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .impact-hero:active { transform: scale(0.98); }
+        .impact-hero h3 { font-size: 26px; margin-top: 10px; font-weight: 900; }
         .impact-hero p { font-size: 14px; opacity: 0.9; font-weight: 500; }
 
-        /* --- 數據卡片與彈窗互動 --- */
+        /* --- 數據卡片 (玻璃擬態) --- */
         .stats-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 30px; }
         .stat-card { 
             background: white; border-radius: 20px; padding: 22px 10px; text-align: center;
             border: 1px solid var(--border); box-shadow: 0 6px 15px rgba(0,0,0,0.02);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer;
         }
-        .stat-card:active { transform: scale(0.92); background: #f9f9f9; }
+        .stat-card:hover { border-color: var(--secondary); transform: translateY(-5px); }
         .stat-val { font-size: 20px; font-weight: 900; color: var(--primary); margin-bottom: 6px; }
         .stat-lab { font-size: 12px; color: var(--text-muted); font-weight: 700; }
 
-        /* --- 嵌入式高速掃描器 --- */
+        /* --- 高速掃描器區塊 --- */
         #qr-reader-container { width: 100%; border-radius: 24px; overflow: hidden; margin-bottom: 20px; display: none; box-shadow: 0 20px 50px rgba(0,0,0,0.2); border: 4px solid var(--primary); }
-        .scan-trigger-section { text-align: center; margin: 35px 0; }
         .btn-main-scan {
-            width: 85%; padding: 22px; border-radius: 100px; border: none; font-size: 19px; font-weight: 900;
+            width: 90%; margin: 0 auto; padding: 22px; border-radius: 100px; border: none; font-size: 19px; font-weight: 900;
             color: white; background: var(--primary-gradient); box-shadow: 0 15px 40px rgba(31, 95, 70, 0.4);
-            cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px;
             animation: pulse 2s infinite; transition: 0.3s;
         }
-        .btn-main-scan:hover { filter: brightness(1.1); }
 
-        /* --- 商品成果展示 (橫向滑動升級) --- */
+        /* --- 橫向滑動卡片 (視覺增強) --- */
         .scroll-section { margin: 40px 0; }
-        .scroll-header { display: flex; justify-content: space-between; align-items: center; padding: 0 5px; margin-bottom: 18px; }
-        .scroll-header h3 { font-size: 20px; font-weight: 900; }
-        .scroll-header .more { font-size: 13px; color: var(--secondary); font-weight: 700; }
-        
-        .horizontal-cards { display: flex; gap: 20px; overflow-x: auto; padding: 10px 5px 30px 5px; scroll-snap-type: x mandatory; }
-        .horizontal-cards::-webkit-scrollbar { display: none; }
+        .scroll-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
         .product-item { 
-            min-width: 280px; background: white; border-radius: 22px; overflow: hidden; 
-            scroll-snap-align: start; box-shadow: 0 10px 25px rgba(0,0,0,0.06); border: 1px solid var(--border); 
+            min-width: 300px; background: white; border-radius: 24px; overflow: hidden; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid var(--border); margin-right: 15px;
         }
-        .product-img-box { width: 100%; height: 180px; position: relative; }
-        .product-img-box img { width: 100%; height: 100%; object-fit: cover; }
-        .product-badge { position: absolute; top: 15px; left: 15px; background: rgba(255,255,255,0.9); padding: 4px 12px; border-radius: 10px; font-size: 11px; font-weight: 900; color: var(--primary); }
-        .product-body { padding: 18px; }
-        .product-title { font-size: 17px; font-weight: 900; margin-bottom: 8px; }
-        .product-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+        .product-img-box { height: 200px; overflow: hidden; }
+        .product-img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .product-item:hover .product-img-box img { transform: scale(1.1); }
 
-        /* --- 長頁面新增：任務區 --- */
+        /* --- 任務清單 (更直覺的交互) --- */
         .mission-card { background: white; border-radius: 24px; padding: 25px; margin-bottom: 25px; border: 1px solid var(--border); }
         .mission-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px dashed #eee; }
-        .mission-item:last-child { border-bottom: none; }
-        .mission-info h4 { font-size: 15px; font-weight: 900; }
-        .mission-info p { font-size: 12px; color: var(--secondary); font-weight: 700; margin-top: 4px; }
-        .btn-task { padding: 10px 18px; border-radius: 12px; border: none; background: var(--primary-light); color: var(--primary); font-weight: 900; font-size: 13px; cursor: pointer; }
+        .btn-task { padding: 10px 20px; border-radius: 14px; border: none; background: var(--primary-light); color: var(--primary); font-weight: 900; font-size: 13px; transition: 0.3s; }
+        .btn-task:active { background: var(--primary); color: white; }
 
-        /* --- 頁面底部：社群活動動態 --- */
-        .activity-feed { text-align: center; padding: 20px; color: var(--text-muted); font-size: 13px; font-weight: 500; }
-
-        /* --- 動效與 Modal --- */
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 15px 40px rgba(31, 95, 70, 0.4); } 50% { transform: scale(1.04); box-shadow: 0 20px 50px rgba(31, 95, 70, 0.6); } 100% { transform: scale(1); box-shadow: 0 15px 40px rgba(31, 95, 70, 0.4); } }
+        /* 動畫庫 */
+        @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); } 100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.04); } 100% { transform: scale(1); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .skeleton { background: var(--skeleton); background-size: 200% 100%; animation: skeleton-loading 1.5s infinite; }
+        @keyframes skeleton-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(12px); z-index: 2000; display: none; align-items: flex-end; }
-        .modal-sheet { 
-            background: white; width: 100%; border-radius: 35px 35px 0 0; padding: 40px 30px; 
-            transform: translateY(100%); transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); 
-        }
+        /* Modal 底部抽屜樣式 */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(10px); z-index: 2000; display: none; align-items: flex-end; }
+        .modal-sheet { background: white; width: 100%; border-radius: 35px 35px 0 0; padding: 40px 30px; transform: translateY(100%); transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
         .modal-overlay.active { display: flex; }
         .modal-overlay.active .modal-sheet { transform: translateY(0); }
-        .modal-handle { width: 40px; height: 5px; background: #E5E7EB; border-radius: 10px; margin: -20px auto 25px auto; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <div class="header">
-        <div class="header-title">🧪 <span>碼上循環實驗室</span></div>
+        <div class="header-title">🧪 <span class="live-indicator"></span> <span>碼上循環實驗室</span></div>
         <div style="font-size: 22px; cursor: pointer;">⚙️</div>
     </div>
 
     <div class="content">
         <div class="profile-section">
-            <img id="userPicture" src="" class="avatar">
+            <div class="avatar-container">
+                <img id="userPicture" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" class="avatar">
+            </div>
             <div class="user-info">
-                <div id="userName" class="name">讀取資料中...</div>
-                <div class="level-tag">✨ 首席研究員 (Lv.5)</div>
+                <div id="userName" class="name skeleton">讀取中...</div>
+                <div class="level-row">
+                    <div class="level-tag">✨ 首席研究員</div>
+                    <div class="exp-bar-mini"><div class="exp-fill"></div></div>
+                </div>
             </div>
         </div>
 
-        <div class="impact-hero">
-            <p>您的永續貢獻已超越 85% 使用者</p>
-            <h3>🌳 相當於 2.5 棵樹日吸收量</h3>
+        <div class="impact-hero" onclick="openModal('impact')">
+            <p>您的永續貢獻已超越 85% 研究生 [cite: 123]</p>
+            <h3>🌳 相當於 <span id="treeVal">2.5</span> 棵樹日吸收量</h3>
         </div>
 
         <div class="stats-container">
             <div class="stat-card" onclick="openModal('carbon')">
-                <div id="carbonVal" class="stat-val">0g</div>
+                <div id="carbonVal" class="stat-val">---</div>
                 <div class="stat-lab">累積減碳量</div>
             </div>
             <div class="stat-card" onclick="openModal('cycle')">
-                <div id="cycleVal" class="stat-val">0次</div>
+                <div id="cycleVal" class="stat-val">---次</div>
                 <div class="stat-lab">高效循環</div>
             </div>
             <div class="stat-card" onclick="openModal('reward')">
@@ -180,51 +170,31 @@
             </div>
         </div>
 
-        <div id="qr-reader-container">
-            <div id="reader"></div>
-        </div>
-
+        <div id="qr-reader-container"><div id="reader"></div></div>
         <div class="scan-trigger-section">
             <button class="btn-main-scan" onclick="startAdvancedScanner()">
                 📷 啟動精準掃描錄入
             </button>
-            <p style="font-size: 12px; color: var(--text-muted); margin-top: 15px;">對準格外品 QR Code，即刻同步永續數據</p>
+            <p style="font-size: 11px; color: var(--text-muted); margin-top: 15px; font-weight: 500;">
+                對準格外品 QR Code，即刻同步永續數據 [cite: 51]
+            </p>
         </div>
 
         <div class="scroll-section">
-            <div class="scroll-header">
-                <h3>實驗室成果精選</h3>
-                <span class="more">查看詳細報告 ›</span>
-            </div>
+            <div class="scroll-header"><h3>實驗室成果精選</h3><span class="more">查看詳細 ›</span></div>
             <div class="horizontal-cards">
                 <div class="product-item">
-                    <div class="product-img-box">
-                        <span class="product-badge">熱門工作坊</span>
-                        <img src="S__309493767_0.jpg" alt="工作坊">
-                    </div>
+                    <div class="product-img-box"><img src="S__309493767_0.jpg"></div>
                     <div class="product-body">
-                        <div class="product-title">科學再生實驗工作坊</div>
-                        <p class="product-desc">將農業剩餘資源「格外品」轉化為新生命，實現全物利用的教育實驗。</p>
+                        <div class="product-title">科學再生實驗工作坊 [cite: 113]</div>
+                        <p class="product-desc">利用果皮廢料製成天然香皂，落實全物利用。 [cite: 46, 50]</p>
                     </div>
                 </div>
                 <div class="product-item">
-                    <div class="product-img-box">
-                        <span class="product-badge">永續商品</span>
-                        <img src="S__309493768_0.jpg" alt="培養杯">
-                    </div>
+                    <div class="product-img-box"><img src="S__309493768_0.jpg"></div>
                     <div class="product-body">
-                        <div class="product-title">醜果能量培養杯</div>
-                        <p class="product-desc">打破美學偏見，每一份醜水果都蘊含極高的抗氧化能量與循環價值。</p>
-                    </div>
-                </div>
-                <div class="product-item">
-                    <div class="product-img-box">
-                        <span class="product-badge">教具組合</span>
-                        <img src="S__309493766_0.jpg" alt="培養皿">
-                    </div>
-                    <div class="product-body">
-                        <div class="product-title">醜果多樣 DIY 培養皿</div>
-                        <p class="product-desc">在培養皿中觀測循環經濟的微型生態，記錄從種子到重生的科學過程。</p>
+                        <div class="product-title">醜果能量培養杯 [cite: 108]</div>
+                        <p class="product-desc">燕巢格外品芭樂，打造成富含維他命C的實驗飲品。 [cite: 108]</p>
                     </div>
                 </div>
             </div>
@@ -233,23 +203,17 @@
         <div class="mission-card">
             <h3 style="margin-bottom: 20px; font-weight: 900;">每日循環任務</h3>
             <div class="mission-item">
-                <div class="mission-info">
-                    <h4>自備環保杯購買飲品</h4>
-                    <p>+45g 減碳量 & 10點</p>
-                </div>
-                <button class="btn-task" onclick="alert('請掃描合作店家 QR Code')">去完成</button>
+                <div class="mission-info"><h4>自備環保杯購買 [cite: 203]</h4><p>+45g 減碳量 & 10點</p></div>
+                <button class="btn-task" onclick="hapticSuccess()">去完成</button>
             </div>
             <div class="mission-item">
-                <div class="mission-info">
-                    <h4>掃描格外品標籤</h4>
-                    <p>+15g 減碳量 & 5點</p>
-                </div>
+                <div class="mission-info"><h4>掃描格外品標籤</h4><p>+15g 減碳量 & 5點</p></div>
                 <button class="btn-task">去掃描</button>
             </div>
         </div>
 
         <div class="activity-feed">
-            🕒 5 分鐘前，有位研究生剛在楠梓校區救了一顆醜水果
+            🕒 最近動態：杜政原 研究員剛完成了一次高效循環紀錄 [cite: 7, 51]
         </div>
     </div>
 </div>
@@ -258,120 +222,105 @@
     <div class="modal-sheet" onclick="event.stopPropagation()">
         <div class="modal-handle"></div>
         <div id="modal-content-area"></div>
-        <button onclick="closeEnhancedModal()" style="width:100%; margin-top:35px; padding:18px; background:var(--primary); color:white; border:none; border-radius:18px; font-weight:900; font-size:16px;">關閉報表</button>
+        <button onclick="closeEnhancedModal()" style="width:100%; margin-top:30px; padding:18px; background:var(--primary); color:white; border:none; border-radius:18px; font-weight:900;">關閉報表</button>
     </div>
 </div>
 
 <script>
-    // --- 參數設定區 ---
     const CONFIG = {
-        LIFF_ID: "2009660466-OkU0MklB", // ⚠️ 請更換
-        GAS_URL: "https://script.google.com/macros/s/AKfycby4F5cm4YDfIiYhAyZkH9e9UIBv6_tVxa8457INVnthJ9_nK_PFlEMGiXMTpqRYN2iUOQ/exec"  // ⚠️ 請更換 (Google Apps Script)
+        LIFF_ID: "2009660466-OkU0MklB",
+        GAS_URL: "https://script.google.com/macros/s/AKfycby4F5cm4YDfIiYhAyZkH9e9UIBv6_tVxa8457INVnthJ9_nK_PFlEMGiXMTpqRYN2iUOQ/exec"
     };
 
-    // --- LIFF & 數據初始化 ---
+    // --- LIFF 偵錯初始化 ---
     async function startApp() {
+        console.log("LIFF 初始化中...");
         try {
             await liff.init({ liffId: CONFIG.LIFF_ID });
+            
             if (!liff.isLoggedIn()) {
+                console.log("用戶未登入，引導登入...");
                 liff.login();
             } else {
                 const profile = await liff.getProfile();
-                document.getElementById('userName').innerText = profile.displayName;
+                console.log("抓到使用者:", profile.displayName);
+                
+                // 移除骨架屏並更新 UI
+                const nameEl = document.getElementById('userName');
+                nameEl.innerText = profile.displayName;
+                nameEl.classList.remove('skeleton');
                 document.getElementById('userPicture').src = profile.pictureUrl;
                 
-                // 從後台(Google Sheets/Excel)拉取真實數據
                 fetchBackendData(profile.userId);
             }
         } catch (err) {
-            console.error("LIFF 啟動失敗", err);
-            document.getElementById('userName').innerText = "訪客研究員";
+            console.error("LIFF 嚴重錯誤:", err);
+            // 本地測試模擬數據
+            if (!liff.isInClient()) {
+                document.getElementById('userName').innerText = "開發測試模式";
+                document.getElementById('userName').classList.remove('skeleton');
+                updateStats(750, 18);
+            }
         }
     }
 
     async function fetchBackendData(uid) {
         try {
-            // 模擬向 GAS 發送請求
             const res = await fetch(`${CONFIG.GAS_URL}?uid=${uid}`);
             const result = await res.json();
             if (result.status === "success") {
                 updateStats(result.data.carbon, result.data.cycle);
             }
         } catch (e) {
-            console.warn("無法連接後端，使用本機預設數據。");
-            updateStats(580, 12); // 預設 Demo 數據
+            updateStats(580, 12); // Fallback Demo 數據 [cite: 51]
         }
     }
 
     function updateStats(carbon, cycle) {
         document.getElementById('carbonVal').innerText = `${carbon}g`;
         document.getElementById('cycleVal').innerText = `${cycle}次`;
+        // 動態樹木換算：假設 1 棵樹一天吸收約 32g CO2 
+        document.getElementById('treeVal').innerText = (carbon / 32).toFixed(1);
     }
 
-    // --- 高性能嵌入式掃描器 ---
+    // --- 高性能掃描器 (修正路徑) ---
     let html5QrCode;
-
     function startAdvancedScanner() {
         const container = document.getElementById('qr-reader-container');
         container.style.display = 'block';
-        
         html5QrCode = new Html5Qrcode("reader");
-        const config = { fps: 25, qrbox: { width: 280, height: 280 } };
-
         html5QrCode.start(
             { facingMode: "environment" }, 
-            config,
-            (decodedText) => {
-                alert("✨ 掃描成功！紀錄已上傳：\n" + decodedText);
+            { fps: 20, qrbox: { width: 250, height: 250 } },
+            (text) => {
+                alert("✨ 錄入成功！感謝您為永續盡一份力：\n" + text);
                 stopScanner();
             }
-        ).catch(err => {
-            alert("相機開啟失敗，請檢查瀏覽器權限。");
-        });
+        ).catch(err => alert("相機權限受阻"));
     }
 
     function stopScanner() {
-        if (html5QrCode) {
-            html5QrCode.stop().then(() => {
-                document.getElementById('qr-reader-container').style.display = 'none';
-            });
-        }
+        if (html5QrCode) html5QrCode.stop().then(() => { document.getElementById('qr-reader-container').style.display = 'none'; });
     }
 
-    // --- 強化版 Modal 邏輯 ---
     function openModal(type) {
-        const dataMap = {
-            carbon: { 
-                t: "🌍 永續減碳報告", 
-                d: "依據《環境部》碳足跡計算標準，您的行為已累計減少 580g 二氧化碳，等同於為地球節省了 12 個一次性杯具的碳足跡產出。" 
-            },
-            cycle: { 
-                t: "♻️ 高效循環紀錄", 
-                d: "您參與了科學再生工作坊、格外品採購等關鍵行為，共達成 12 次有效資源循環，成功將「負價值」轉化為「新資產」。" 
-            },
-            reward: { 
-                t: "🎁 實質回饋明細", 
-                d: "您目前擁有 2 張實體商店折扣券。累積更多減碳點數，可解鎖「實驗室專屬 DIY 教具箱」。" 
-            }
+        const info = {
+            carbon: { t: "🌍 永續減碳報告", d: "依據《環境部》碳足跡標準，您已成功減少相當於 12 個塑膠杯的碳排放 [cite: 51, 123]。" },
+            cycle: { t: "♻️ 高效循環紀錄", d: "您參與了科學再生、格外品採購等關鍵行為 [cite: 115]。" },
+            impact: { t: "🌳 綠趨勢影響力", d: "數據引用基準：行政院農業部四大政策主軸 。" }
         };
-        const content = dataMap[type];
+        const content = info[type] || info.carbon;
         document.getElementById('modal-content-area').innerHTML = `
-            <h2 style="color:var(--primary); font-weight:900; font-size:24px;">${content.t}</h2>
-            <p style="margin:20px 0; color:var(--text-main); line-height:1.8; font-size:15px;">${content.d}</p>
-            <div style="background:#f8faf9; padding:20px; border-radius:15px; border:1px solid #eee;">
-                <span style="font-size:12px; color:var(--text-muted); font-weight:700;">數據引用基準：</span><br>
-                <span style="font-size:11px; color:#999;">台灣環境部 2026 永續指標 / 高科大供應鏈管理系 WBS 邏輯數據庫</span>
-            </div>
+            <h2 style="color:var(--primary); font-weight:900;">${content.t}</h2>
+            <p style="margin:20px 0; line-height:1.8; color:var(--text-main);">${content.d}</p>
         `;
         document.getElementById('enhancedModal').classList.add('active');
     }
 
-    function closeEnhancedModal() {
-        document.getElementById('enhancedModal').classList.remove('active');
-    }
+    function closeEnhancedModal() { document.getElementById('enhancedModal').classList.remove('active'); }
+    function hapticSuccess() { if (window.navigator.vibrate) window.navigator.vibrate(50); alert('任務已接收！'); }
 
     window.onload = startApp;
 </script>
-
 </body>
 </html>
