@@ -39,6 +39,9 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans TC', sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        /* 升級點：加入平滑滾動 */
+        html { scroll-behavior: smooth; }
         html, body { background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; width: 100%; }
 
         /* 背景裝飾 */
@@ -87,7 +90,9 @@
         .scanner-corners::before, .scanner-corners::after { content: ''; position: absolute; width: 30px; height: 30px; border-color: #4CAF50; border-style: solid; }
         .scanner-corners::before { top: -2px; right: -2px; border-width: 3px 3px 0 0; border-radius: 0 6px 0 0; }
         .scanner-corners::after { bottom: -2px; left: -2px; border-width: 0 0 3px 3px; border-radius: 0 0 0 6px; }
-        .scanner-line { position: absolute; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #4CAF50, transparent); animation: scan-line 2s ease-in-out infinite; }
+        
+        /* 升級點：加入 will-change 提升動畫效能 */
+        .scanner-line { position: absolute; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #4CAF50, transparent); animation: scan-line 2s ease-in-out infinite; will-change: top; }
         .scanner-hint { position: absolute; bottom: 100px; color: rgba(255,255,255,0.8); font-size: 14px; font-weight: 700; text-align: center; }
 
         /* ==========================================================================
@@ -140,7 +145,8 @@
         .btn-main-scan { width: 100%; padding: 20px; border-radius: 18px; border: none; font-size: 17px; font-weight: 900; color: white; background: var(--primary-gradient); box-shadow: var(--shadow-float); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform 0.2s, box-shadow 0.2s; letter-spacing: 0.3px; position: relative; overflow: hidden; }
         .btn-main-scan::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent); animation: shimmer-btn 3s infinite; }
         .btn-main-scan:active { transform: scale(0.97); box-shadow: 0 8px 30px rgba(25,88,64,0.3); }
-        .btn-scan-icon { font-size: 22px; animation: bounce-scan 2s infinite; }
+        /* 升級點：加入 will-change 提升動畫效能 */
+        .btn-scan-icon { font-size: 22px; animation: bounce-scan 2s infinite; will-change: transform; }
 
         /* Scroll Cards */
         .scroll-section { margin: 28px 0; }
@@ -573,32 +579,32 @@
             <div class="set-group-title">🏆 成就徽章</div>
             <div class="set-group">
                 <div class="badges-grid">
-                    <div class="badge-card unlocked" onclick="showBadgeInfo('first','初次掃描','完成第一次 QR 掃描！')">
+                    <div class="badge-card unlocked" onclick="showBadgeInfo('first')">
                         <div class="badge-icon">🌱</div>
                         <div class="badge-name">初心者</div>
                         <div class="badge-desc">第一次掃描</div>
                     </div>
-                    <div class="badge-card unlocked" onclick="showBadgeInfo('week','連續一週','連續7天完成任務！')">
+                    <div class="badge-card unlocked" onclick="showBadgeInfo('week')">
                         <div class="badge-icon">🔥</div>
                         <div class="badge-name">連續達人</div>
                         <div class="badge-desc">連續 7 天</div>
                     </div>
-                    <div class="badge-card locked" onclick="showBadgeInfo('tree','種下10棵樹','累積相當於10棵樹的吸碳量')">
+                    <div class="badge-card locked" onclick="showBadgeInfo('tree')">
                         <div class="badge-icon">🌳</div>
                         <div class="badge-name">植樹英雄</div>
                         <div class="badge-desc">10棵樹吸碳</div>
                     </div>
-                    <div class="badge-card locked" onclick="showBadgeInfo('carbon','減碳1公斤','累積減碳達1000g')">
+                    <div class="badge-card locked" onclick="showBadgeInfo('carbon')">
                         <div class="badge-icon">⚡</div>
                         <div class="badge-name">減碳先鋒</div>
                         <div class="badge-desc">累積 1000g</div>
                     </div>
-                    <div class="badge-card locked" onclick="showBadgeInfo('cycle','循環20次','完成20次循環認證')">
+                    <div class="badge-card locked" onclick="showBadgeInfo('cycle')">
                         <div class="badge-icon">♻️</div>
                         <div class="badge-name">循環達人</div>
                         <div class="badge-desc">循環 20 次</div>
                     </div>
-                    <div class="badge-card locked" onclick="showBadgeInfo('share','分享好友','分享成果給3位好友')">
+                    <div class="badge-card locked" onclick="showBadgeInfo('share')">
                         <div class="badge-icon">🤝</div>
                         <div class="badge-name">傳播者</div>
                         <div class="badge-desc">分享 3 位</div>
@@ -674,16 +680,45 @@
 </div>
 
 <script>
-    // ===== 1. 全域設定與變數 =====
-    const CONFIG = {
-        LIFF_ID: "2009660466-OkU0MklB",
-        GAS_URL: "https://script.google.com/macros/s/AKfycbwPfyGPWdpB3gcB3ZOvtw4VKXvqZOzEQ47n5HAxEkZsCX4Zr6IiLFSORk0exnvCqi3G/exec"
+    // ===== 升級 1：資料與介面分離 (Data-Driven Configuration) =====
+    // 將靜態文字抽離，未來要修改只要改這邊，不用去海底撈針
+    const APP_DATA = {
+        CONFIG: {
+            LIFF_ID: "2009660466-OkU0MklB",
+            GAS_URL: "https://script.google.com/macros/s/AKfycbwPfyGPWdpB3gcB3ZOvtw4VKXvqZOzEQ47n5HAxEkZsCX4Zr6IiLFSORk0exnvCqi3G/exec"
+        },
+        THEMES: {
+            green: { primary:'#195840', grad:'linear-gradient(135deg,#1F5F46,#348E66)', light:'#E8F5E9', sec:'#4CAF50', name:'森林綠' },
+            ocean: { primary:'#0369a1', grad:'linear-gradient(135deg,#0369a1,#38bdf8)', light:'#E0F2FE', sec:'#38bdf8', name:'海洋藍' },
+            earth: { primary:'#92400e', grad:'linear-gradient(135deg,#92400e,#f59e0b)', light:'#FEF3C7', sec:'#f59e0b', name:'大地褐' }
+        },
+        FAQ: [
+            { q: '如何累積減碳量？', a: '每次掃描永續標籤或完成任務，即可累積減碳量和循環次數。' },
+            { q: '獎勵券如何使用？', a: '獎勵券可於合作通路或特約店家出示 QR Code 折抵使用。' },
+            { q: '棵樹/日是什麼意思？', a: '將您的減碳量換算為單棵樹一日可吸收的碳量，讓影響力更直觀。' },
+            { q: '資料多久更新一次？', a: '每次掃描成功後即時更新，資料儲存於雲端。' }
+        ],
+        BADGES: {
+            first:  { icon: '🌱', name: '初次掃描', desc: '完成第一次 QR 掃描！', locked: false },
+            week:   { icon: '🔥', name: '連續一週', desc: '連續7天完成任務！', locked: false },
+            tree:   { icon: '🌳', name: '種下10棵樹', desc: '累積相當於10棵樹的吸碳量', locked: true },
+            carbon: { icon: '⚡', name: '減碳1公斤', desc: '累積減碳達1000g', locked: true },
+            cycle:  { icon: '♻️', name: '循環20次', desc: '完成20次循環認證', locked: true },
+            share:  { icon: '🤝', name: '分享好友', desc: '分享成果給3位好友', locked: true }
+        },
+        MODAL_INFO: {
+            carbon: { t: "🌍 累積減碳貢獻", d: "參考《環境部》碳足跡標準，每一公克減碳量都是對地球的真實回饋。您已減少了多個一次性杯具對環境的衝擊。" },
+            cycle:  { t: "♻️ 高效循環紀錄", d: "您積極參與了資源再造與格外品認證，將原本被浪費的資產轉化為具備循環商業價值的永續資產。" },
+            impact: { t: "🌳 永續綠影響力指標", d: "我們將您的累積減碳貢獻折算為具體的『樹木日吸收量』。這項指標參考了行政院農業部的綠色政策主軸，讓永續價值變得直觀可見。" },
+            reward: { t: "🎁 可用獎勵券說明", d: "您的減碳與循環行為可累積點數兌換實體獎勵。目前持有的獎勵券可於合作通路或特約店家進行折扣抵用。" }
+        }
     };
 
+    // 狀態變數
     let currentUserProfile = null;
     let html5QrCode = null;
 
-    // ===== 2. TOAST 提示訊息 =====
+    // ===== 基礎 UI 函式 =====
     function showToast(msg, type = 'success', duration = 3000) {
         const t = document.getElementById('toast');
         t.textContent = msg;
@@ -691,10 +726,10 @@
         setTimeout(() => { t.classList.remove('show'); }, duration);
     }
 
-    // ===== 3. 初始化 LIFF 與資料 =====
+    // ===== 升級 2：非同步資料初始化 =====
     async function startApp() {
         try {
-            await liff.init({ liffId: CONFIG.LIFF_ID });
+            await liff.init({ liffId: APP_DATA.CONFIG.LIFF_ID });
             if (!liff.isLoggedIn()) {
                 liff.login();
             } else {
@@ -704,14 +739,13 @@
             }
         } catch (err) {
             console.error("LIFF 初始化失敗", err);
-            document.getElementById('userName').innerText = "測試研究員";
-            document.getElementById('userName').classList.remove('skeleton');
-            currentUserProfile = { userId: "test_user_001", displayName: "測試研究員" };
+            // 降級處理 (Fallback for testing)
+            currentUserProfile = { userId: "test_user_001", displayName: "測試研究員", pictureUrl: "" };
+            updateUIProfile(currentUserProfile);
             fetchBackendData(currentUserProfile.userId, currentUserProfile.displayName);
         }
     }
 
-    // ===== 4. 更新使用者大頭貼與名稱 =====
     function updateUIProfile(profile) {
         const nameEl = document.getElementById('userName');
         const picEl = document.getElementById('userPicture');
@@ -721,21 +755,20 @@
         picEl.classList.remove('skeleton');
     }
 
-    // ===== 5. 向 GAS 後端請求數據 =====
+    // ===== 資料請求與更新 =====
     async function fetchBackendData(uid, name) {
         try {
-            const url = `${CONFIG.GAS_URL}?uid=${uid}&name=${encodeURIComponent(name)}`;
+            const url = `${APP_DATA.CONFIG.GAS_URL}?uid=${uid}&name=${encodeURIComponent(name)}`;
             const res = await fetch(url);
             const result = await res.json();
             if (result.status === "success") {
                 updateStatsUI(result.data.carbon, result.data.cycle, result.data.reward);
             }
         } catch (e) {
-            console.warn("資料庫連線失敗，請確認 GAS 網址");
+            console.warn("資料庫連線失敗，目前為離線展示模式");
         }
     }
 
-    // ===== 6. 更新數據面板 (Stats) =====
     function updateStatsUI(carbon, cycle, reward) {
         document.getElementById('carbonVal').innerText = `${carbon}g`;
         document.getElementById('cycleVal').innerText = `${cycle}次`;
@@ -748,28 +781,29 @@
 
         const progress = Math.min((carbon % 500) / 5, 100);
         document.getElementById('expFill').style.width = `${progress}%`;
+        
         const impactProgress = Math.min((treeCount / 10) * 100, 100);
         const ring = document.getElementById('progressRing');
         ring.style.background = `conic-gradient(var(--primary) 0% ${impactProgress}%, var(--primary-light) ${impactProgress}% 100%)`;
     }
 
-    // ===== 7. 任務互動邏輯 =====
+    // ===== 互動與掃描邏輯 =====
     function doMission(id) {
         const btn = document.getElementById(`btn-task-${id}`);
         const dot = document.getElementById(`dot-${id}`);
         const item = document.getElementById(`mission-${id}`);
         if (btn.classList.contains('done-btn')) return;
+        
         startScanner();
-        // 模擬掃描後完成任務
+        // 模擬：掃描完成後變更狀態
         setTimeout(() => {
             btn.textContent = '✓ 完成';
             btn.classList.add('done-btn');
             dot.classList.add('done');
             item.classList.add('done');
-        }, 500);
+        }, 800);
     }
 
-    // ===== 8. 掃描器功能 (Html5Qrcode) =====
     function startScanner() {
         const scannerDiv = document.getElementById('fullscreenScanner');
         scannerDiv.style.display = 'flex';
@@ -782,7 +816,7 @@
                 stopScanner();
                 document.getElementById('loading-overlay').style.display = 'flex';
                 try {
-                    const addUrl = `${CONFIG.GAS_URL}?uid=${currentUserProfile.userId}&action=add`;
+                    const addUrl = `${APP_DATA.CONFIG.GAS_URL}?uid=${currentUserProfile.userId}&action=add`;
                     const updateRes = await fetch(addUrl);
                     const updateJson = await updateRes.json();
                     if (updateJson.status === "updated") {
@@ -810,15 +844,9 @@
         }
     }
 
-    // ===== 9. 資訊彈跳視窗 Modal =====
+    // ===== 彈跳視窗與頁面切換 =====
     function openModal(type) {
-        const info = {
-            carbon: { t: "🌍 累積減碳貢獻", d: "參考《環境部》碳足跡標準，每一公克減碳量都是對地球的真實回饋。您已減少了多個一次性杯具對環境的衝擊。" },
-            cycle: { t: "♻️ 高效循環紀錄", d: "您積極參與了資源再造與格外品認證，將原本被浪費的資產轉化為具備循環商業價值的永續資產。" },
-            impact: { t: "🌳 永續綠影響力指標", d: "我們將您的累積減碳貢獻折算為具體的『樹木日吸收量』。這項指標參考了行政院農業部的綠色政策主軸，讓永續價值變得直觀可見。" },
-            reward: { t: "🎁 可用獎勵券說明", d: "您的減碳與循環行為可累積點數兌換實體獎勵。目前持有的獎勵券可於合作通路或特約店家進行折扣抵用。" }
-        };
-        const content = info[type] || info.carbon;
+        const content = APP_DATA.MODAL_INFO[type] || APP_DATA.MODAL_INFO.carbon;
         document.getElementById('modal-content-area').innerHTML = `
             <h2 style="color:var(--primary); font-weight:900; margin-bottom:16px; font-size:22px;">${content.t}</h2>
             <p style="line-height:1.9; color:var(--text-main); font-size:15px;">${content.d}</p>
@@ -830,150 +858,147 @@
         document.getElementById('enhancedModal').classList.remove('active');
     }
 
-    // ===== 10. 頁面切換機制 =====
     function switchPage(page) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(`page-${page}`).classList.add('active');
 
-        // nav highlight
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         if (page === 'home') document.getElementById('nav-home').classList.add('active');
         if (page === 'settings') document.getElementById('nav-settings').classList.add('active');
 
-        // sync settings avatar/name
         if (page === 'settings' && currentUserProfile) {
-            const pic = document.getElementById('userPicture').src;
-            const name = document.getElementById('userName').innerText;
-            document.getElementById('settingsAvatar').src = pic || "https://cdn-icons-png.flaticon.com/512/847/847969.png";
-            document.getElementById('settingsName').innerText = name;
-            const saved = localStorage.getItem('nickname');
-            if (saved) document.getElementById('nicknameDisplay').innerText = saved;
+            document.getElementById('settingsAvatar').src = document.getElementById('userPicture').src;
+            document.getElementById('settingsName').innerText = document.getElementById('userName').innerText;
+            
+            const savedNickname = localStorage.getItem('nickname');
+            if (savedNickname) document.getElementById('nicknameDisplay').innerText = savedNickname;
+            
             const goal = localStorage.getItem('carbonGoal') || '500';
             document.getElementById('goalDisplay').innerText = `${goal}g / 月`;
         }
-        // restore dark toggle
+        
         document.getElementById('toggle-dark').checked = document.body.classList.contains('dark-mode');
         window.scrollTo(0, 0);
     }
 
-    // ===== 11. 深色模式切換 =====
+    // ===== 升級 3：設定管理模組化 (Settings Management) =====
     function toggleDarkMode(on) {
         document.body.classList.toggle('dark-mode', on);
         localStorage.setItem('darkMode', on ? '1' : '0');
     }
 
-    // ===== 12. 佈景主題切換 =====
-    const THEMES = {
-        green: { primary:'#195840', grad:'linear-gradient(135deg,#1F5F46,#348E66)', light:'#E8F5E9', sec:'#4CAF50' },
-        ocean: { primary:'#0369a1', grad:'linear-gradient(135deg,#0369a1,#38bdf8)', light:'#E0F2FE', sec:'#38bdf8' },
-        earth: { primary:'#92400e', grad:'linear-gradient(135deg,#92400e,#f59e0b)', light:'#FEF3C7', sec:'#f59e0b' }
-    };
     function setTheme(name) {
-        const t = THEMES[name];
+        const t = APP_DATA.THEMES[name];
         if (!t) return;
         const root = document.documentElement.style;
         root.setProperty('--primary', t.primary);
         root.setProperty('--primary-gradient', t.grad);
         root.setProperty('--primary-light', t.light);
         root.setProperty('--secondary', t.sec);
+        
         document.querySelectorAll('.theme-pill').forEach(p => p.classList.remove('active'));
         document.getElementById(`theme-${name}`).classList.add('active');
+        
         localStorage.setItem('theme', name);
-        showToast(`已切換為「${name === 'green' ? '森林綠' : name === 'ocean' ? '海洋藍' : '大地褐'}」主題`, 'success');
+        showToast(`已切換為「${t.name}」主題`, 'success');
     }
 
-    // ===== 13. 儲存開關設定 =====
     function saveSetting(key, val) {
         localStorage.setItem(`setting_${key}`, val ? '1' : '0');
         showToast(val ? '✅ 通知已開啟' : '🔕 通知已關閉', 'success', 2000);
     }
 
-    // ===== 14. 分享成果 =====
     function shareResult() {
         const carbon = document.getElementById('carbonVal').innerText;
         const tree = document.getElementById('treeValDisplay').innerText;
         const text = `🌱 我在碼上循環實驗室累積減碳 ${carbon}，相當於種了 ${tree} 棵樹！一起來守護地球 ♻️`;
+        
         if (navigator.share) {
             navigator.share({ title: '我的減碳成果', text });
         } else {
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('📋 成果已複製，快去分享！', 'success');
-            });
+            navigator.clipboard.writeText(text).then(() => showToast('📋 成果已複製，快去分享！', 'success'));
         }
     }
 
-    // ===== 15. 客服與聯絡資訊 =====
     function openContact(type) {
         if (type === 'line') {
-            showToast('💬 即稍微開啟 LINE 客服...', 'success', 2000);
+            showToast('💬 即將開啟 LINE 客服...', 'success', 2000);
         } else {
             openSettingModal('faq');
         }
     }
 
-    // ===== 16. 設定頁面的動態 Modal 內容渲染 =====
+    // ===== 升級 4：乾淨的 Template Generator =====
+    function renderNicknameModal() {
+        const cur = localStorage.getItem('nickname') || '';
+        return `
+            <h2 style="font-weight:900;color:var(--primary);margin-bottom:18px;">📝 修改暱稱</h2>
+            <input id="nicknameInput" type="text" maxlength="12" placeholder="輸入你的暱稱（最多12字）" value="${cur}"
+                style="width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:14px;font-size:16px;font-weight:700;outline:none;font-family:inherit;">
+            <button onclick="saveNickname()" style="width:100%;margin-top:20px;padding:18px;background:var(--primary-gradient);color:white;border:none;border-radius:16px;font-weight:900;font-size:16px;cursor:pointer;">儲存</button>
+            <button onclick="closeSettingModal()" style="width:100%;margin-top:10px;padding:14px;background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:16px;font-weight:700;font-size:15px;cursor:pointer;">取消</button>
+        `;
+    }
+
+    function renderGoalModal() {
+        const cur = localStorage.getItem('carbonGoal') || '500';
+        return `
+            <h2 style="font-weight:900;color:var(--primary);margin-bottom:8px;">🎯 每月減碳目標</h2>
+            <p style="color:var(--text-muted);font-size:14px;margin-bottom:20px;">設定你每月想達成的減碳量</p>
+            <div style="text-align:center;font-size:36px;font-weight:900;color:var(--primary);margin-bottom:16px;" id="goalPreview">${cur}g</div>
+            <input type="range" min="100" max="2000" step="50" value="${cur}" class="goal-slider"
+                oninput="document.getElementById('goalPreview').innerText=this.value+'g';" id="goalSliderInput">
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);font-weight:700;margin-bottom:20px;">
+                <span>100g</span><span>1000g</span><span>2000g</span>
+            </div>
+            <button onclick="saveGoal()" style="width:100%;padding:18px;background:var(--primary-gradient);color:white;border:none;border-radius:16px;font-weight:900;font-size:16px;cursor:pointer;">儲存目標</button>
+            <button onclick="closeSettingModal()" style="width:100%;margin-top:10px;padding:14px;background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:16px;font-weight:700;font-size:15px;cursor:pointer;">取消</button>
+        `;
+    }
+
+    function renderFaqModal() {
+        const faqHtml = APP_DATA.FAQ.map(item => `
+            <div style="margin-bottom:16px;border-radius:14px;border:1px solid var(--border);overflow:hidden;">
+                <div style="background:var(--primary-light);padding:12px 16px;font-weight:800;font-size:14px;color:var(--primary);">Q: ${item.q}</div>
+                <div style="padding:12px 16px;font-size:14px;color:var(--text-main);line-height:1.7;">A: ${item.a}</div>
+            </div>
+        `).join('');
+
+        return `
+            <h2 style="font-weight:900;color:var(--primary);margin-bottom:20px;">❓ 常見問題</h2>
+            ${faqHtml}
+            <button onclick="closeSettingModal()" style="width:100%;padding:18px;background:var(--primary-gradient);color:white;border:none;border-radius:16px;font-weight:900;font-size:16px;cursor:pointer;margin-top:8px;">關閉</button>
+        `;
+    }
+
+    function renderAboutModal() {
+        return `
+            <div style="text-align:center;margin-bottom:24px;">
+                <div style="font-size:52px;margin-bottom:12px;">🧪</div>
+                <h2 style="font-weight:900;color:var(--primary);font-size:22px;">碼上循環實驗室</h2>
+                <p style="color:var(--text-muted);font-size:13px;margin-top:6px;">Circular Impact Lab</p>
+            </div>
+            <p style="line-height:1.9;color:var(--text-main);font-size:15px;margin-bottom:16px;">我們致力於透過科技與行為設計，讓每一個人的日常選擇都能轉化為可量化的永續影響力。</p>
+            <div style="background:var(--primary-light);border-radius:16px;padding:16px 20px;margin-bottom:20px;">
+                <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:4px;">🌍 使命</div>
+                <p style="font-size:14px;color:var(--text-main);line-height:1.7;">讓每一次消費選擇都成為對地球負責任的行動</p>
+            </div>
+            <div style="font-size:12px;color:var(--text-muted);text-align:center;margin-bottom:20px;">版本 v2.0.0 · 碼上循環 © 2025</div>
+            <button onclick="closeSettingModal()" style="width:100%;padding:18px;background:var(--primary-gradient);color:white;border:none;border-radius:16px;font-weight:900;font-size:16px;cursor:pointer;">關閉</button>
+        `;
+    }
+
     function openSettingModal(type) {
         const body = document.getElementById('setting-modal-body');
-        let html = '';
-
-        if (type === 'nickname') {
-            const cur = localStorage.getItem('nickname') || '';
-            html = `
-                <h2 style="font-weight:900;color:var(--primary);margin-bottom:18px;">📝 修改暱稱</h2>
-                <input id="nicknameInput" type="text" maxlength="12" placeholder="輸入你的暱稱（最多12字）"
-                    value="${cur}"
-                    style="width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:14px;font-size:16px;font-weight:700;outline:none;font-family:inherit;">
-                <button onclick="saveNickname()" style="width:100%;margin-top:20px;padding:18px;background:var(--primary-gradient);color:white;border:none;border-radius:16px;font-weight:900;font-size:16px;cursor:pointer;">儲存</button>
-                <button onclick="closeSettingModal()" style="width:100%;margin-top:10px;padding:14px;background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:16px;font-weight:700;font-size:15px;cursor:pointer;">取消</button>
-            `;
-        } else if (type === 'goal') {
-            const cur = localStorage.getItem('carbonGoal') || '500';
-            html = `
-                <h2 style="font-weight:900;color:var(--primary);margin-bottom:8px;">🎯 每月減碳目標</h2>
-                <p style="color:var(--text-muted);font-size:14px;margin-bottom:20px;">設定你每月想達成的減碳量</p>
-                <div style="text-align:center;font-size:36px;font-weight:900;color:var(--primary);margin-bottom:16px;" id="goalPreview">${cur}g</div>
-                <input type="range" min="100" max="2000" step="50" value="${cur}" class="goal-slider"
-                    oninput="document.getElementById('goalPreview').innerText=this.value+'g';" id="goalSliderInput">
-                <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);font-weight:700;margin-bottom:20px;">
-                    <span>100g</span><span>1000g</span><span>2000g</span>
-                </div>
-                <button onclick="saveGoal()" style="width:100%;padding:18px;background:var(--primary-gradient);color:white;border:none;border-radius:16px;font-weight:900;font-size:16px;cursor:pointer;">儲存目標</button>
-                <button onclick="closeSettingModal()" style="width:100%;margin-top:10px;padding:14px;background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:16px;font-weight:700;font-size:15px;cursor:pointer;">取消</button>
-            `;
-        } else if (type === 'about') {
-            html = `
-                <div style="text-align:center;margin-bottom:24px;">
-                    <div style="font-size:52px;margin-bottom:12px;">🧪</div>
-                    <h2 style="font-weight:900;color:var(--primary);font-size:22px;">碼上循環實驗室</h2>
-                    <p style="color:var(--text-muted);font-size:13px;margin-top:6px;">Circular Impact Lab</p>
-                </div>
-                <p style="line-height:1.9;color:var(--text-main);font-size:15px;margin-bottom:16px;">我們致力於透過科技與行為設計，讓每一個人的日常選擇都能轉化為可量化的永續影響力。</p>
-                <div style="background:var(--primary-light);border-radius:16px;padding:16px 20px;margin-bottom:20px;">
-                    <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:4px;">🌍 使命</div>
-                    <p style="font-size:14px;color:var(--text-main);line-height:1.7;">讓每一次消費選擇都成為對地球負責任的行動</p>
-                </div>
-                <div style="font-size:12px;color:var(--text-muted);text-align:center;margin-bottom:20px;">版本 v2.0.0 · 碼上循環 © 2025</div>
-                <button onclick="closeSettingModal()" style="width:100%;padding:18px;background:var(--primary-gradient);color:white;border:none;border-radius:16px;font-weight:900;font-size:16px;cursor:pointer;">關閉</button>
-            `;
-        } else if (type === 'faq') {
-            html = `
-                <h2 style="font-weight:900;color:var(--primary);margin-bottom:20px;">❓ 常見問題</h2>
-                ${[
-                    ['如何累積減碳量？','每次掃描永續標籤或完成任務，即可累積減碳量和循環次數。'],
-                    ['獎勵券如何使用？','獎勵券可於合作通路或特約店家出示 QR Code 折抵使用。'],
-                    ['棵樹/日是什麼意思？','將您的減碳量換算為單棵樹一日可吸收的碳量，讓影響力更直觀。'],
-                    ['資料多久更新一次？','每次掃描成功後即時更新，資料儲存於雲端。']
-                ].map(([q,a]) => `
-                    <div style="margin-bottom:16px;border-radius:14px;border:1px solid var(--border);overflow:hidden;">
-                        <div style="background:var(--primary-light);padding:12px 16px;font-weight:800;font-size:14px;color:var(--primary);">Q: ${q}</div>
-                        <div style="padding:12px 16px;font-size:14px;color:var(--text-main);line-height:1.7;">A: ${a}</div>
-                    </div>
-                `).join('')}
-                <button onclick="closeSettingModal()" style="width:100%;padding:18px;background:var(--primary-gradient);color:white;border:none;border-radius:16px;font-weight:900;font-size:16px;cursor:pointer;margin-top:8px;">關閉</button>
-            `;
+        
+        // 使用 Switch 分配對應的視窗，告別冗長的 if-else
+        switch(type) {
+            case 'nickname': body.innerHTML = renderNicknameModal(); break;
+            case 'goal':     body.innerHTML = renderGoalModal(); break;
+            case 'faq':      body.innerHTML = renderFaqModal(); break;
+            case 'about':    body.innerHTML = renderAboutModal(); break;
         }
-
-        body.innerHTML = html;
+        
         document.getElementById('settingModal').classList.add('active');
     }
 
@@ -981,6 +1006,7 @@
         document.getElementById('settingModal').classList.remove('active');
     }
 
+    // ===== 存檔與徽章處理 =====
     function saveNickname() {
         const val = document.getElementById('nicknameInput').value.trim();
         if (!val) { showToast('⚠️ 請輸入暱稱', 'error', 2000); return; }
@@ -999,19 +1025,19 @@
         showToast(`🎯 目標設定為 ${val}g / 月`, 'success');
     }
 
-    function showBadgeInfo(id, name, desc) {
-        const body = document.getElementById('setting-modal-body');
-        const icons = { first:'🌱', week:'🔥', tree:'🌳', carbon:'⚡', cycle:'♻️', share:'🤝' };
-        const locked = ['tree','carbon','cycle','share'].includes(id);
-        body.innerHTML = `
+    function showBadgeInfo(badgeId) {
+        const badge = APP_DATA.BADGES[badgeId];
+        if(!badge) return;
+
+        document.getElementById('setting-modal-body').innerHTML = `
             <div style="text-align:center;padding:20px 0;">
-                <div style="font-size:60px;margin-bottom:14px;">${icons[id]}</div>
-                <h2 style="font-weight:900;color:var(--primary);margin-bottom:8px;">${name}</h2>
-                <p style="color:var(--text-muted);font-size:14px;margin-bottom:20px;">${desc}</p>
+                <div style="font-size:60px;margin-bottom:14px;">${badge.icon}</div>
+                <h2 style="font-weight:900;color:var(--primary);margin-bottom:8px;">${badge.name}</h2>
+                <p style="color:var(--text-muted);font-size:14px;margin-bottom:20px;">${badge.desc}</p>
                 <div style="display:inline-block;padding:8px 20px;border-radius:20px;font-size:13px;font-weight:800;
-                    background:${locked ? '#FEF3C7' : 'var(--primary-light)'};
-                    color:${locked ? '#92400e' : 'var(--primary)'};">
-                    ${locked ? '🔒 尚未解鎖' : '✅ 已解鎖！'}
+                    background:${badge.locked ? '#FEF3C7' : 'var(--primary-light)'};
+                    color:${badge.locked ? '#92400e' : 'var(--primary)'};">
+                    ${badge.locked ? '🔒 尚未解鎖' : '✅ 已解鎖！'}
                 </div>
             </div>
             <button onclick="closeSettingModal()" style="width:100%;padding:18px;background:var(--primary-gradient);color:white;border:none;border-radius:16px;font-weight:900;font-size:16px;cursor:pointer;margin-top:16px;">關閉</button>
@@ -1019,21 +1045,25 @@
         document.getElementById('settingModal').classList.add('active');
     }
 
-    // ===== 17. 復原儲存的設定狀態 (Theme, Dark Mode, etc.) =====
+    // ===== 初始化系統 =====
     function restoreSettings() {
         if (localStorage.getItem('darkMode') === '1') {
             document.body.classList.add('dark-mode');
             document.getElementById('toggle-dark').checked = true;
         }
         const theme = localStorage.getItem('theme');
-        if (theme && THEMES[theme]) setTheme(theme);
+        if (theme && APP_DATA.THEMES[theme]) setTheme(theme);
+        
         ['notify','achieve','event'].forEach(k => {
             const el = document.getElementById(`toggle-${k}`);
             if (el) el.checked = localStorage.getItem(`setting_${k}`) !== '0';
         });
     }
 
-    window.onload = () => { restoreSettings(); startApp(); };
+    window.onload = () => { 
+        restoreSettings(); 
+        startApp(); 
+    };
 </script>
 </body>
 </html>
