@@ -203,12 +203,24 @@
         .nav-center-btn { width: 54px; height: 54px; border-radius: 18px; background: var(--primary-gradient); display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 8px 25px rgba(25,88,64,0.35); cursor: pointer; transition: 0.2s; border: none; margin-top: -20px; }
         .nav-center-btn:active { transform: scale(0.93); }
 
-        /* Modals */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 2000; display: none; align-items: flex-end; justify-content: center; }
+        /* Modals (PRO 升級版 - 置中視窗) */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
-        .modal-sheet { background: white; width: 100%; max-width: 480px; border-radius: 32px 32px 0 0; padding: 12px 30px 40px; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
-        .modal-overlay.active .modal-sheet { transform: translateY(0); }
-        .modal-handle { width: 40px; height: 4px; background: #E5E7EB; border-radius: 2px; margin: 0 auto 24px; }
+        .modal-sheet { background: white; width: 100%; max-width: 400px; border-radius: 28px; padding: 24px; transform: scale(0.95); opacity: 0; transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1); max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+        .modal-overlay.active .modal-sheet { transform: scale(1); opacity: 1; }
+        .modal-handle { display: none; /* 置中視窗不需要頂部橫條 */ }
+
+        /* PRO Modal 內部 UI 專用樣式 */
+        .pro-modal-title { font-size: 22px; font-weight: 900; color: var(--primary); display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+        .pro-modal-box { background: #f9fafb; border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+        .pro-formula { font-family: monospace; background: var(--primary-light); color: var(--primary-dark); padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center; margin: 10px 0; border: 1px dashed rgba(25,88,64,0.3); }
+        .pro-impact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+        .pro-impact-item { background: white; padding: 12px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid rgba(229,231,235,0.5); }
+        .pro-ticket { background: linear-gradient(135deg, #F59E0B 0%, #fbbf24 100%); border-radius: 16px; padding: 20px; color: white; text-align: center; position: relative; margin-bottom: 16px; box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3); border: 1px solid rgba(255,255,255,0.4); }
+        .pro-ticket::before, .pro-ticket::after { content:''; position:absolute; top:50%; width:20px; height:20px; background:white; border-radius:50%; transform:translateY(-50%); box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
+        .pro-ticket::before { left:-10px; } .pro-ticket::after { right:-10px; }
+        .pro-progress-bar { width: 100%; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; margin-top: 8px; }
+        .pro-progress-fill { height: 100%; background: var(--primary-gradient); border-radius: 4px; transition: width 1s ease-out; }
 
         /* Toast */
         .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px); background: var(--text-main); color: white; padding: 12px 20px; border-radius: 14px; font-size: 14px; font-weight: 700; white-space: nowrap; z-index: 9000; opacity: 0; transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1); max-width: 90vw; text-align: center; box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
@@ -844,41 +856,101 @@
         }
     }
 
-    // ===== 彈跳視窗與頁面切換 =====
+    // ===== 彈跳視窗與頁面切換 (PRO 升級版) =====
     function openModal(type) {
-        const content = APP_DATA.MODAL_INFO[type] || APP_DATA.MODAL_INFO.carbon;
-        document.getElementById('modal-content-area').innerHTML = `
-            <h2 style="color:var(--primary); font-weight:900; margin-bottom:16px; font-size:22px;">${content.t}</h2>
-            <p style="line-height:1.9; color:var(--text-main); font-size:15px;">${content.d}</p>
-        `;
+        let html = '';
+        
+        // 自動抓取首頁目前的真實數據
+        const currentCarbon = document.getElementById('carbonVal').innerText;
+        const currentCycle = document.getElementById('cycleVal').innerText;
+        const currentReward = document.getElementById('rewardVal').innerText;
+
+        if (type === 'carbon') {
+            html = `
+                <div class="pro-modal-title">⚡️ 累積減碳分析</div>
+                <p style="color:var(--text-muted); font-size:14px; margin-bottom:16px;">您目前的總減碳量為 <strong style="color:var(--primary); font-size:16px;">${currentCarbon}</strong>，每一克都是對地球的真實回饋。</p>
+                
+                <div class="pro-modal-box">
+                    <div style="font-size:12px; font-weight:800; color:var(--primary);">📊 減碳計算公式</div>
+                    <div class="pro-formula">Σ (替代方案碳足跡 - 實際排碳) × 循環係數</div>
+                    <p style="font-size:11px; color:var(--text-muted); margin-top:8px; line-height:1.5;">參考《環境部》產品碳足跡計算指引，確保您的每次行動具備實質環境效益。</p>
+                </div>
+
+                <div style="font-size:14px; font-weight:900; margin-top:20px; color:var(--text-main);">🌍 等同於保護了什麼生態？</div>
+                <div class="pro-impact-grid">
+                    <div class="pro-impact-item">
+                        <div style="font-size:28px; margin-bottom:6px;">🌳</div>
+                        <div style="font-size:15px; font-weight:900; color:var(--primary);">+0.5 棵樹</div>
+                        <div style="font-size:10px; color:var(--text-muted); margin-top:4px;">單日最高碳吸收量</div>
+                    </div>
+                    <div class="pro-impact-item">
+                        <div style="font-size:28px; margin-bottom:6px;">🐢</div>
+                        <div style="font-size:15px; font-weight:900; color:#0369a1;">-12 個塑膠</div>
+                        <div style="font-size:10px; color:var(--text-muted); margin-top:4px;">免於流入海洋生態</div>
+                    </div>
+                </div>
+            `;
+        } else if (type === 'cycle') {
+            html = `
+                <div class="pro-modal-title">♻️ 深度循環紀錄</div>
+                <p style="color:var(--text-muted); font-size:14px; margin-bottom:16px; line-height:1.6;">總計完成 <strong style="color:var(--primary);">${currentCycle}</strong> 循環認證，您積極的行動已經超越了 <strong style="color:var(--accent);">75%</strong> 的實驗室成員！</p>
+                
+                <div class="pro-modal-box">
+                    <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:900; margin-bottom:6px;">
+                        <span>🏆 循環達人等級</span>
+                        <span style="color:var(--primary);">Lv.3 高級研究員</span>
+                    </div>
+                    <div class="pro-progress-bar"><div class="pro-progress-fill" style="width: 80%;"></div></div>
+                    <div style="font-size:11px; color:var(--text-muted); text-align:right; margin-top:6px;">距離下一級還差 5 次循環</div>
+                </div>
+
+                <div style="font-size:14px; font-weight:900; margin-top:20px; margin-bottom:12px; color:var(--text-main);">📦 循環材質量化分佈</div>
+                <div>
+                    <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:700; margin-bottom:4px; color:var(--text-muted);"><span>☕ 減少一次性杯具</span> <strong style="color:var(--text-main);">60%</strong></div>
+                    <div class="pro-progress-bar" style="background:#f3f4f6; margin-top:0;"><div class="pro-progress-fill" style="width:60%; background:#4ade80;"></div></div>
+                    
+                    <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:700; margin-bottom:4px; margin-top:14px; color:var(--text-muted);"><span>🍎 格外品拯救行動</span> <strong style="color:var(--text-main);">25%</strong></div>
+                    <div class="pro-progress-bar" style="background:#f3f4f6; margin-top:0;"><div class="pro-progress-fill" style="width:25%; background:#facc15;"></div></div>
+                    
+                    <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:700; margin-bottom:4px; margin-top:14px; color:var(--text-muted);"><span>♻️ 再生材料測試</span> <strong style="color:var(--text-main);">15%</strong></div>
+                    <div class="pro-progress-bar" style="background:#f3f4f6; margin-top:0;"><div class="pro-progress-fill" style="width:15%; background:#60a5fa;"></div></div>
+                </div>
+            `;
+        } else if (type === 'reward') {
+            html = `
+                <div class="pro-modal-title">🎟️ 專屬獎勵中心</div>
+                <p style="color:var(--text-muted); font-size:14px; margin-bottom:16px;">您目前持有 <strong style="color:#F59E0B; font-size:16px;">${currentReward}</strong> 實體獎勵兌換券。</p>
+                
+                <div class="pro-ticket">
+                    <div style="font-size:10px; font-weight:900; opacity:0.9; text-transform:uppercase; letter-spacing:2px; margin-bottom:4px;">Premium Voucher</div>
+                    <div style="font-size:32px; font-weight:900; margin:4px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">50 元折抵金</div>
+                    <div style="font-size:11px; font-weight:800; opacity:0.9; border-top:1px dashed rgba(255,255,255,0.4); padding-top:12px; margin-top:12px;">
+                        碼上循環合作通路限定使用
+                    </div>
+                </div>
+
+                <div class="pro-modal-box">
+                    <div style="font-size:13px; font-weight:900; margin-bottom:10px; color:var(--primary);">💡 如何使用與獲得？</div>
+                    <ul style="font-size:13px; color:var(--text-main); padding-left:18px; line-height:1.8; font-weight:500;">
+                        <li>每累積 <strong style="color:var(--primary);">500g</strong> 減碳量可自動兌換 1 張。</li>
+                        <li>結帳時向合作店家出示專屬會員條碼即可折抵。</li>
+                        <li><span style="color:#DC2626; font-weight:800;">注意：</span>票券期限為發放後 90 天內。</li>
+                    </ul>
+                </div>
+            `;
+        } else if (type === 'impact') {
+            html = `
+                <div class="pro-modal-title">🌳 永續綠影響力指標</div>
+                <p style="color:var(--text-main); font-size:15px; line-height:1.8; font-weight:500;">我們將您的累積減碳貢獻折算為具體的『樹木日吸收量』。這項指標參考了行政院農業部的綠色政策主軸，讓抽象的永續價值變得直觀可見。</p>
+            `;
+        }
+
+        document.getElementById('modal-content-area').innerHTML = html;
         document.getElementById('enhancedModal').classList.add('active');
     }
 
     function closeEnhancedModal() {
         document.getElementById('enhancedModal').classList.remove('active');
-    }
-
-    function switchPage(page) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(`page-${page}`).classList.add('active');
-
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        if (page === 'home') document.getElementById('nav-home').classList.add('active');
-        if (page === 'settings') document.getElementById('nav-settings').classList.add('active');
-
-        if (page === 'settings' && currentUserProfile) {
-            document.getElementById('settingsAvatar').src = document.getElementById('userPicture').src;
-            document.getElementById('settingsName').innerText = document.getElementById('userName').innerText;
-            
-            const savedNickname = localStorage.getItem('nickname');
-            if (savedNickname) document.getElementById('nicknameDisplay').innerText = savedNickname;
-            
-            const goal = localStorage.getItem('carbonGoal') || '500';
-            document.getElementById('goalDisplay').innerText = `${goal}g / 月`;
-        }
-        
-        document.getElementById('toggle-dark').checked = document.body.classList.contains('dark-mode');
-        window.scrollTo(0, 0);
     }
 
     // ===== 升級 3：設定管理模組化 (Settings Management) =====
