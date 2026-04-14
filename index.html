@@ -654,26 +654,155 @@
 
             <div class="version-tag">碼上循環實驗室 v2.0.0 · Made with 💚</div>
         </div>
-    </div></div><div class="bottom-nav">
-    <div class="nav-item active" id="nav-home" onclick="switchPage('home')">
-        <div class="nav-icon">🏠</div>
-        <div class="nav-label">首頁</div>
-    </div>
-    <div class="nav-item" id="nav-data" onclick="switchPage('home')">
-        <div class="nav-icon">📊</div>
-        <div class="nav-label">數據</div>
-    </div>
-    <button class="nav-center-btn" onclick="startScanner()">📷</button>
-    <div class="nav-item" id="nav-mission" onclick="switchPage('home')">
-        <div class="nav-icon">🎯</div>
-        <div class="nav-label">任務</div>
-    </div>
-    <div class="nav-item" id="nav-settings" onclick="switchPage('settings')">
-        <div class="nav-icon">⚙️</div>
-        <div class="nav-label">設定</div>
-    </div>
-</div>
+<div id="page-data" class="page">
+        <div class="header">
+            <div class="header-title">📊 永續影響力報告</div>
+            <div style="width:40px;"></div>
+        </div>
+        <div class="content">
+            <div class="mission-card">
+                <h3 style="font-size: 16px; font-weight: 900; margin-bottom: 16px; color: var(--primary);">本週減碳趨勢 (g)</h3>
+                <div style="display: flex; align-items: flex-end; justify-content: space-between; height: 120px; padding-bottom: 20px; border-bottom: 1px solid var(--border); margin-bottom: 12px;">
+                    <div style="display:flex; flex-direction:column; align-items:center; width: 12%;">
+                        <div style="width: 100%; height: 40px; background: var(--primary-light); border-radius: 6px 6px 0 0;"></div>
+                        <span style="font-size: 10px; color: var(--text-muted); margin-top: 8px;">一</span>
+                    </div>
+                    <div style="display:flex; flex-direction:column; align-items:center; width: 12%;">
+                        <div style="width: 100%; height: 70px; background: var(--primary-light); border-radius: 6px 6px 0 0;"></div>
+                        <span style="font-size: 10px; color: var(--text-muted); margin-top: 8px;">二</span>
+                    </div>
+                    <div style="display:flex; flex-direction:column; align-items:center; width: 12%;">
+                        <div style="font-size: 10px; font-weight: 900; color: var(--primary); margin-bottom: 4px;">120</div>
+                        <div style="width: 100%; height: 100px; background: var(--primary-gradient); border-radius: 6px 6px 0 0; box-shadow: 0 4px 10px rgba(25,88,64,0.3);"></div>
+                        <span style="font-size: 10px; color: var(--primary); font-weight: 900; margin-top: 8px;">三</span>
+                    </div>
+                    <div style="display:flex; flex-direction:column; align-items:center; width: 12%;">
+                        <div style="width: 100%; height: 0px; background: var(--primary-light); border-radius: 6px 6px 0 0;"></div>
+                        <span style="font-size: 10px; color: var(--text-muted); margin-top: 8px;">四</span>
+                    </div>
+                    <div style="display:flex; flex-direction:column; align-items:center; width: 12%;">
+                        <div style="width: 100%; height: 0px; background: var(--primary-light); border-radius: 6px 6px 0 0;"></div>
+                        <span style="font-size: 10px; color: var(--text-muted); margin-top: 8px;">五</span>
+                    </div>
+                    <div style="display:flex; flex-direction:column; align-items:center; width: 12%;">
+                        <div style="width: 100%; height: 0px; background: var(--primary-light); border-radius: 6px 6px 0 0;"></div>
+                        <span style="font-size: 10px; color: var(--text-muted); margin-top: 8px;">六</span>
+                    </div>
+                    <div style="display:flex; flex-direction:column; align-items:center; width: 12%;">
+                        <div style="width: 100%; height: 0px; background: var(--primary-light); border-radius: 6px 6px 0 0;"></div>
+                        <span style="font-size: 10px; color: var(--text-muted); margin-top: 8px;">日</span>
+                    </div>
+                </div>
+                <div style="font-size: 12px; color: var(--text-muted); text-align: center;">比上週同期成長 <strong style="color: var(--secondary);">+15% 📈</strong></div>
+            </div>
 
+            <div class="section-title">🏆 實驗室排行榜</div>
+            <div class="mission-card" style="padding: 0; overflow: hidden;">
+                <div style="display: flex; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); background: #fffbf1;">
+                    <div style="font-size: 20px; font-weight: 900; color: #F59E0B; width: 30px;">1</div>
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #e5e7eb; margin-right: 12px; overflow:hidden;"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" style="width:100%;"></div>
+                    <div style="flex: 1;">
+                        <div style="font-size: 14px; font-weight: 800;">永續小精靈</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">本月累積 3,250g</div>
+                    </div>
+                    <div style="font-size: 16px;">🥇</div>
+                </div>
+                <div style="display: flex; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); background: #f8fafc;">
+                    <div style="font-size: 20px; font-weight: 900; color: #94a3b8; width: 30px;">2</div>
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #e5e7eb; margin-right: 12px; overflow:hidden;"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka" style="width:100%;"></div>
+                    <div style="flex: 1;">
+                        <div style="font-size: 14px; font-weight: 800;">綠色和平鴨</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">本月累積 2,800g</div>
+                    </div>
+                    <div style="font-size: 16px;">🥈</div>
+                </div>
+                <div style="display: flex; align-items: center; padding: 16px 20px; background: var(--primary-light);">
+                    <div style="font-size: 16px; font-weight: 900; color: var(--primary); width: 30px;">14</div>
+                    <div style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--primary); margin-right: 12px; overflow:hidden;"><img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" style="width:100%;"></div>
+                    <div style="flex: 1;">
+                        <div style="font-size: 14px; font-weight: 800; color: var(--primary);">我 (研究員)</div>
+                        <div style="font-size: 11px; color: var(--primary); opacity: 0.8;">本月累積 500g</div>
+                    </div>
+                    <div style="font-size: 12px; font-weight: 800; color: var(--primary);">🔼 升2名</div>
+                </div>
+            </div>
+        </div>
+    </div><div id="page-mission" class="page">
+        <div class="header">
+            <div class="header-title">🎯 任務與挑戰</div>
+            <div style="width:40px;"></div>
+        </div>
+        <div class="content">
+            <div class="mission-card" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; border: none;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px;">
+                    <div>
+                        <div style="font-size: 12px; font-weight: 700; opacity: 0.8; margin-bottom: 4px;">本週活躍度</div>
+                        <div style="font-size: 24px; font-weight: 900;">45 / 100</div>
+                    </div>
+                    <div style="font-size: 32px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">🎁</div>
+                </div>
+                <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 10px; overflow: hidden; margin-bottom: 8px;">
+                    <div style="width: 45%; height: 100%; background: #fcd34d; border-radius: 10px;"></div>
+                </div>
+                <div style="font-size: 11px; font-weight: 600; opacity: 0.9;">滿 100 點即可開啟驚喜盲盒，獲得實體點數！</div>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                <div style="padding: 8px 16px; background: var(--text-main); color: white; font-weight: 800; font-size: 13px; border-radius: 20px;">每週挑戰</div>
+                <div style="padding: 8px 16px; background: white; color: var(--text-muted); font-weight: 800; font-size: 13px; border-radius: 20px; border: 1px solid var(--border);">特殊活動</div>
+            </div>
+
+            <div class="mission-card">
+                <div class="mission-item">
+                    <div style="font-size: 24px; margin-right: 12px; background: #E8F5E9; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 14px;">☕</div>
+                    <div class="mission-info">
+                        <h4>自備杯購買達 3 次</h4>
+                        <div style="width: 100%; height: 4px; background: #e5e7eb; border-radius: 2px; margin: 6px 0 4px;"><div style="width: 33%; height: 100%; background: var(--secondary); border-radius: 2px;"></div></div>
+                        <p style="color: var(--text-muted);">進度：1 / 3</p>
+                    </div>
+                    <div style="font-size: 12px; font-weight: 900; color: var(--accent);">+20 點</div>
+                </div>
+                
+                <div class="mission-item">
+                    <div style="font-size: 24px; margin-right: 12px; background: #FEF3C7; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 14px;">🍎</div>
+                    <div class="mission-info">
+                        <h4>拯救格外品 1 份</h4>
+                        <div style="width: 100%; height: 4px; background: #e5e7eb; border-radius: 2px; margin: 6px 0 4px;"><div style="width: 0%; height: 100%; background: var(--secondary); border-radius: 2px;"></div></div>
+                        <p style="color: var(--text-muted);">進度：0 / 1</p>
+                    </div>
+                    <div style="font-size: 12px; font-weight: 900; color: var(--accent);">+15 點</div>
+                </div>
+
+                <div class="mission-item done">
+                    <div style="font-size: 24px; margin-right: 12px; background: #f3f4f6; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 14px; opacity: 0.5;">📖</div>
+                    <div class="mission-info">
+                        <h4>閱讀本週永續專欄</h4>
+                        <div style="width: 100%; height: 4px; background: #e5e7eb; border-radius: 2px; margin: 6px 0 4px;"><div style="width: 100%; height: 100%; background: #9ca3af; border-radius: 2px;"></div></div>
+                        <p style="color: var(--text-muted);">進度：1 / 1</p>
+                    </div>
+                   <button class="btn-task done-btn">已領取</button>
+                </div>
+            </div>
+        </div>
+    </div></div><div class="bottom-nav">
+        <div class="nav-item active" id="nav-home" onclick="switchPage('home')">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label">首頁</div>
+        </div>
+        <div class="nav-item" id="nav-data" onclick="switchPage('data')">
+            <div class="nav-icon">📊</div>
+            <div class="nav-label">數據</div>
+        </div>
+        <button class="nav-center-btn" onclick="startScanner()">📷</button>
+        <div class="nav-item" id="nav-mission" onclick="switchPage('mission')">
+            <div class="nav-icon">🎯</div>
+            <div class="nav-label">任務</div>
+        </div>
+        <div class="nav-item" id="nav-settings" onclick="switchPage('settings')">
+            <div class="nav-icon">⚙️</div>
+            <div class="nav-label">設定</div>
+        </div>
+    </div>
 <div class="modal-overlay" id="enhancedModal" onclick="closeEnhancedModal()">
     <div class="modal-sheet" onclick="event.stopPropagation()">
         <div class="modal-handle"></div>
@@ -952,7 +1081,9 @@
     function closeEnhancedModal() {
         document.getElementById('enhancedModal').classList.remove('active');
     }
-// ===== 頁面切換功能 (修復設定按鈕) =====
+
+
+// ===== 頁面切換功能 (支援所有 4 個分頁) =====
     function switchPage(page) {
         // 1. 隱藏所有頁面，顯示目標頁面
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -961,9 +1092,11 @@
         // 2. 更新底部導航列的亮燈狀態
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         if (page === 'home') document.getElementById('nav-home').classList.add('active');
+        if (page === 'data') document.getElementById('nav-data').classList.add('active');
+        if (page === 'mission') document.getElementById('nav-mission').classList.add('active');
         if (page === 'settings') document.getElementById('nav-settings').classList.add('active');
 
-        // 3. 如果是進入設定頁，同步更新大頭貼與暱稱
+        // 3. 同步更新設定頁面的資料
         if (page === 'settings' && currentUserProfile) {
             document.getElementById('settingsAvatar').src = document.getElementById('userPicture').src;
             document.getElementById('settingsName').innerText = document.getElementById('userName').innerText;
